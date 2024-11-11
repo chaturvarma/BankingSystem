@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Login as</title>
+    <link href="/output.css" rel="stylesheet">
+</head>
+
+<body class="w-screen h-screen bg-white flex flex-col items-center justify-center">
+    <span class="text-4xl w-full max-w-[800px] leading-normal text-center font-bold mb-4 mt-[-5rem]">What would you like
+        to login as?</span>
+    <span class="text-lg text-gray-600 w-full max-w-[700px] leading-relaxed text-center font-semibold mb-16">Choose any
+        of the profiles below to continue with the role that best suits your needs and access level</span>
+    <div class="flex flex-row gap-12">
+        <a href="/customer/index.html" class="flex flex-col items-center">
+            <img class="w-[200px] h-[200px] rounded-2xl hover:shadow-2xl"
+                src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png" />
+            <span class="mt-4 font-semibold text-lg">Customer</span>
+        </a>
+        <a href="/employee/index.html" class="flex flex-col items-center">
+            <img class="w-[200px] h-[200px] rounded-2xl hover:shadow-2xl"
+                src="https://i.pinimg.com/474x/5b/50/e7/5b50e75d07c726d36f397f6359098f58.jpg" />
+            <span class="mt-4 font-semibold text-lg">Employee</span>
+        </a>
+        <a href="/manager/index.html" class="flex flex-col items-center">
+            <img class="w-[200px] h-[200px] rounded-2xl hover:shadow-2xl"
+                src="https://i.pinimg.com/474x/61/54/76/61547625e01d8daf941aae3ffb37f653.jpg" />
+            <span class="mt-4 font-semibold text-lg">Manager</span>
+        </a>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            function getQueryParam(name) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(name);
+            }
+
+            const id = getQueryParam("id");
+            if (id) {
+                document.cookie = `id=${id}; path=/;`;
+                console.log(id);
+            }
+        });
+    </script>
+</body>
+
+</html>
