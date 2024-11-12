@@ -1,7 +1,7 @@
 package com.example.demo.model;
 import java.util.ArrayList;
 
-class CreditCard extends Card {
+public class CreditCard extends Card {
     private double withdrawLimit;
     private double interest;
     private double amountWithdrawn;

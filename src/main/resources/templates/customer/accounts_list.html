@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Accounts - SKCAB Customer</title>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
@@ -50,23 +51,22 @@
                 and filter for quick access to account information
             </p>
             <ul class="w-full max-w-[550px] mt-11 flex flex-col align-middle">
-                <li class="bg-white p-4 border border-gray-200 rounded-xl mb-5">
+                <li th:each="account, iterStat : ${accounts}"
+                    class="bg-white p-4 border border-gray-200 rounded-xl mb-5">
                     <div class="flex items-center space-x-4 rtl:space-x-reverse">
                         <div class="flex-shrink-0">
                             <img class="w-8 h-8 rounded-full"
                                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ0FpBg5Myb9CQ-bQpFou9BY9JXoRG6208_Q&s"
-                                alt="Neil image">
+                                alt="Account Image">
                         </div>
                         <div class="flex-1 min-w-0 text-blue-600">
-                            <p class="text-base font-semibold text-gray-900 truncate dark:text-white">
-                                College B234
-                            </p>
-                            <p class="text-sm font-normal text-gray-500 truncate dark:text-gray-400 mt-0.5">
-                                Current Account
-                            </p>
+                            <p class="text-base font-semibold text-gray-900 truncate dark:text-white"
+                                th:text="${account.accountNumber}">111111111111</p>
+                            <p class="text-sm font-normal text-gray-500 truncate dark:text-gray-400 mt-0.5"
+                                th:text="${accountTypes[iterStat.index]}">Savings Account</p>
                         </div>
                         <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                            ₹3200
+                            <span th:text="'₹' + ${account.balance}">3000</span>
                         </div>
                         <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover"
                             data-dropdown-trigger="hover"
