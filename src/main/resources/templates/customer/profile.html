@@ -58,15 +58,12 @@
                                 alt="Neil image">
                         </div>
                         <div class="flex-1 min-w-0">
-                            <p class="text-[15px] font-semibold text-gray-900 truncate dark:text-white">
-                                Sai Deep Dunduka
+                            <p th:text="${cname}" class="text-[15px] font-semibold text-gray-900 truncate dark:text-white">
+                                Customer Name
                             </p>
-                            <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                                +91 987654321
+                            <p th:text="${cphone}" class="text-sm text-gray-500 truncate dark:text-gray-400">
+                                Customer Phone
                             </p>
-                        </div>
-                        <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                            4 accounts
                         </div>
                     </div>
                 </li>
@@ -87,28 +84,37 @@
                         <tr class="bg-blue-500 border-b border-blue-400">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
-                                Name
+                                Customer ID
                             </th>
-                            <td class="px-6 py-4">
-                                Anish Maganti
+                            <td th:text="${cid}" class="px-6 py-4">
+                                Customer ID
                             </td>
                         </tr>
                         <tr class="bg-blue-500 border-b border-blue-400">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
-                                Email
+                                Full Name
                             </th>
-                            <td class="px-6 py-4">
-                                se22uari018@mahindrauniversity.edu.in
+                            <td th:text="${cname}" class="px-6 py-4">
+                                Customer Name
                             </td>
                         </tr>
                         <tr class="bg-blue-500 border-b border-blue-400">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
-                                Balance
+                                Permanent Address
                             </th>
-                            <td class="px-6 py-4">
-                                200
+                            <td th:text="${caddress}" class="px-6 py-4">
+                                Mahindra University
+                            </td>
+                        </tr>
+                        <tr class="bg-blue-500 border-b border-blue-400">
+                            <th scope="row"
+                                class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
+                                Phone Number
+                            </th>
+                            <td th:text="${cphone}" class="px-6 py-4">
+                                +913336669990
                             </td>
                         </tr>
                     </tbody>

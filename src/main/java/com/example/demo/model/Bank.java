@@ -5,12 +5,11 @@ public class Bank {
     private String name;
     private final String bank_id;
     private ArrayList<Branch> branches;
-     // Taking Branch object as an Array List
 
     public Bank(String name, String bank_id) {
         this.name = name;
         this.bank_id = bank_id;
-        this.branches = new ArrayList<>(); // Initialise an Empty List
+        this.branches = new ArrayList<>();
     }
 
     public void addBranch(Branch branch) {
@@ -21,9 +20,13 @@ public class Bank {
         branches.remove(branch);
     }
 
+    public ArrayList<Branch> getBranches() {
+        return branches;
+    }
+
     public void getBranchDetails() {
         for (Branch branch : branches) {
-            System.out.println("Branch Name: " + branch.getBranchName()); // Branch class has getBranchName method
+            System.out.println("Branch Name: " + branch.getBranchName());
         }
     }
 

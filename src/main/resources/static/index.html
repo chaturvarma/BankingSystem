@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <head>
-    <title>Login as</title>
+    <title>Login Profile - SKCAB</title>
     <link href="/output.css" rel="stylesheet">
 </head>
 
@@ -27,20 +27,6 @@
             <span class="mt-4 font-semibold text-lg">Manager</span>
         </a>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            function getQueryParam(name) {
-                const urlParams = new URLSearchParams(window.location.search);
-                return urlParams.get(name);
-            }
-
-            const id = getQueryParam("id");
-            if (id) {
-                document.cookie = `id=${id}; path=/;`;
-                console.log(id);
-            }
-        });
-    </script>
 </body>
 
 </html>

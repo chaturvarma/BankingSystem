@@ -44,34 +44,34 @@ public class Branch{
 	String getContactNumber(){
 		return contactNumber;
     }
-	List<Employee> getEmployees(){
+	public List<Employee> getEmployees(){
 		return employees;
 	}
-	List<Customer> getCustomers(){
+	public List<Customer> getCustomers(){
 		return customers;
 	}
-	List<Account> getAccounts(){
+	public List<Account> getAccounts(){
 		return accounts;
 	}
-	List<Transaction> getTransactions(){
+	public List<Transaction> getTransactions(){
 		return transactions;
 	}
-	List<LoanApplication> getLoanApplications(){
+	public List<LoanApplication> getLoanApplications(){
 		return loanApplications;
 	}
-	List<LoanAccount> getLoanAccounts(){
+	public List<LoanAccount> getLoanAccounts(){
 		return loanAccounts;
 	}
-	List<FixedDeposit> getFixedDeposits(){
+	public List<FixedDeposit> getFixedDeposits(){
 		return fixedDeposits;
 	}
-	List<RecurringDeposit> getRecurringDeposits(){
+	public List<RecurringDeposit> getRecurringDeposits(){
 		return recurringDeposits;
 	}
-	void addAccount(Account account){
+	public void addAccount(Account account){
 		accounts.add(account);
 	}
-	void removeAccount(Account account){
+	public void removeAccount(Account account){
 		if(accounts.contains(account)){
 			accounts.remove(account);
 		}
@@ -79,10 +79,10 @@ public class Branch{
 			System.out.println("Account does not exist.");
 		}
 	}
-	void addEmployee(Employee employee){
+	public void addEmployee(Employee employee){
 		employees.add(employee);
 	}
-	void removeEmployee(Employee employee){
+	public void removeEmployee(Employee employee){
 		if(employees.contains(employee)){
 			employees.remove(employee);
 		}
@@ -90,13 +90,13 @@ public class Branch{
 			System.out.println("Employee does not exist.");
 		}
 	}
-	void addCustomer(Customer customer){
+	public void addCustomer(Customer customer){
 		customers.add(customer);
 	}
-	void addTransaction(Transaction transaction){
+	public void addTransaction(Transaction transaction){
 		transactions.add(transaction);
 	}
-	void addLoanApplication(LoanApplication loanApplication){
+	public void addLoanApplication(LoanApplication loanApplication){
 		loanApplications.add(loanApplication);
 	}
 	void removeLoanApplication(LoanApplication loanApplication){
