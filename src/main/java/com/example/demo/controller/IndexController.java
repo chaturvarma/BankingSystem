@@ -8,7 +8,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.example.demo.model.*;
+import com.example.demo.model.Account;
+import com.example.demo.model.Bank;
+import com.example.demo.model.Branch;
+import com.example.demo.model.Card;
+import com.example.demo.model.CreditCard;
+import com.example.demo.model.Customer;
+import com.example.demo.model.DebitCard;
+import com.example.demo.model.Employee;
+import com.example.demo.model.Manager;
+import com.example.demo.model.SavingsAccount;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -45,7 +54,6 @@ public class IndexController {
             customer2.addDebitCard(savingsAccount2);
             customer1.addCreditCard(5000.0, 12.5);
             customer2.addCreditCard(7000.0, 14.0);
-
         }
 
         if (bank != null && !bank.getBranches().isEmpty()) {
@@ -102,7 +110,6 @@ public class IndexController {
 
     @GetMapping("/customer")
     public String redirectToCustomerIndex(Model model, HttpSession session) {
-        model.addAttribute("cid_one", session.getAttribute("cid_one"));
         return "customer/index";
     }
 
@@ -219,6 +226,7 @@ public class IndexController {
 
         return "customer/cards_list";
     }
+
     /*
      * Employee application and routing starts from here
      */
@@ -226,6 +234,60 @@ public class IndexController {
     @GetMapping("/employee")
     public String redirectToEmployeeIndex(Model model, HttpSession session) {
         return "employee/index";
+    }
+
+    @GetMapping("/employee/profile")
+    public String redirectToEmployeeProfile(Model model, HttpSession session) {
+        String employeeId = (String) session.getAttribute("eid");
+
+        if (employeeId != null && bank != null) {
+            for (Branch branch : bank.getBranches()) {
+                for (Employee employee : branch.getEmployees()) {
+                    if (employee.getEmployeeId().equals(employeeId)) {
+                        model.addAttribute("ename", employee.getEmployeeName());
+                        model.addAttribute("eid", employee.getEmployeeId());
+                        model.addAttribute("edesignation", employee.getDesignation());
+                        model.addAttribute("esalary", employee.getSalary());
+                        model.addAttribute("ephone", employee.getPhoneNumber());
+                        model.addAttribute("eemail", employee.getEmail());
+                        model.addAttribute("ejoin", employee.getJoiningDate());
+                        model.addAttribute("ebranch", employee.getBranch().getBranchName());
+                        break;
+                    }
+                }
+            }
+        } else {
+            model.addAttribute("error", "Employee not found or session is invalid");
+        }
+        return "employee/profile";
+    }
+
+    @GetMapping("/employee/customers_list")
+    public String getCustomersOfEmployeeBranch(Model model, HttpSession session) {
+        String employeeId = (String) session.getAttribute("eid");
+
+        if (employeeId != null && bank != null) {
+            outerLoop: for (Branch branch : bank.getBranches()) {
+                for (Employee employee : branch.getEmployees()) {
+                    if (employee.getEmployeeId().equals(employeeId)) {
+                        List<Customer> customers = new ArrayList<>();
+
+                        for (Customer customer : branch.getCustomers()) {
+                            customers.add(customer);
+                        }
+
+                        model.addAttribute("customers", customers);
+                        model.addAttribute("branchName", branch.getBranchName());
+
+                        break outerLoop;
+                    }
+                }
+            }
+        } else {
+            model.addAttribute("error", "Employee not found or session is invalid");
+        }
+
+        return "employee/customers_list";
     }
 
     /*
@@ -236,4 +298,58 @@ public class IndexController {
     public String redirectToManagerIndex(Model model, HttpSession session) {
         return "manager/index";
     }
+
+    @GetMapping("/manager/profile")
+    public String getManagerProfile(Model model, HttpSession session) {
+        String managerId = (String) session.getAttribute("mid");
+
+        if (managerId != null && bank != null) {
+            for (Branch branch : bank.getBranches()) {
+                for (Employee employee : branch.getEmployees()) {
+                    if (employee.getEmployeeId().equals(managerId) && employee instanceof Manager) {
+                        Manager manager = (Manager) employee;
+
+                        model.addAttribute("mname", manager.getEmployeeName());
+                        model.addAttribute("mid", manager.getEmployeeId());
+                        model.addAttribute("mdesignation", employee.getDesignation());
+                        model.addAttribute("msalary", manager.getSalary());
+                        model.addAttribute("mphone", manager.getPhoneNumber());
+                        model.addAttribute("memail", manager.getEmail());
+                        model.addAttribute("mjoin", manager.getJoiningDate());
+                        model.addAttribute("mbranch", manager.getBranch().getBranchName());
+                        break;
+                    }
+                }
+            }
+        } else {
+            model.addAttribute("error", "Manager not found or session is invalid");
+        }
+
+        return "manager/profile";
+    }
+
+    @GetMapping("/manager/employee_list")
+    public String getEmployeesOfManagerBranch(Model model, HttpSession session) {
+        String managerId = (String) session.getAttribute("mid");
+
+        if (managerId != null && bank != null) {
+            List<Employee> employeeList = new ArrayList<>();
+            outerLoop: for (Branch branch : bank.getBranches()) {
+                for (Employee employee : branch.getEmployees()) {
+                    if (employee instanceof Manager && employee.getEmployeeId().equals(managerId)) {
+                        continue outerLoop;
+                    }
+
+                    employeeList.add(employee);
+                }
+            }
+
+            model.addAttribute("employees", employeeList);
+        } else {
+            model.addAttribute("error", "Manager not found or session is invalid");
+        }
+
+        return "manager/employee_list";
+    }
+
 }

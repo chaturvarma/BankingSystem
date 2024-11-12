@@ -1,13 +1,14 @@
 package com.example.demo.model;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Branch{
+public class Branch {
 	private String branchID;
 	private String branchName;
 	private String address;
 	private String contactNumber;
-	//private Employee branchManager;
+	// private Employee branchManager;
 	private List<Employee> employees;
 	private List<Customer> customers;
 	private List<Account> accounts;
@@ -16,13 +17,13 @@ public class Branch{
 	private List<LoanAccount> loanAccounts;
 	private List<FixedDeposit> fixedDeposits;
 	private List<RecurringDeposit> recurringDeposits;
-	
-	public Branch(String branchID, String branchName, String address, String contactNumber){
+
+	public Branch(String branchID, String branchName, String address, String contactNumber) {
 		this.branchID = branchID;
 		this.branchName = branchName;
 		this.address = address;
 		this.contactNumber = contactNumber;
-		//this.branchManager = branchManager;
+		// this.branchManager = branchManager;
 		employees = new ArrayList<>();
 		customers = new ArrayList<>();
 		accounts = new ArrayList<>();
@@ -32,115 +33,136 @@ public class Branch{
 		fixedDeposits = new ArrayList<>();
 		recurringDeposits = new ArrayList<>();
 	}
-	String getBranchID(){
+
+	public String getBranchID() {
 		return branchID;
 	}
-	String getBranchName(){
+
+	public String getBranchName() {
 		return branchName;
 	}
-	String getAddress(){
+
+	public String getAddress() {
 		return address;
 	}
-	String getContactNumber(){
+
+	public String getContactNumber() {
 		return contactNumber;
-    }
-	public List<Employee> getEmployees(){
+	}
+
+	public List<Employee> getEmployees() {
 		return employees;
 	}
-	public List<Customer> getCustomers(){
+
+	public List<Customer> getCustomers() {
 		return customers;
 	}
-	public List<Account> getAccounts(){
+
+	public List<Account> getAccounts() {
 		return accounts;
 	}
-	public List<Transaction> getTransactions(){
+
+	public List<Transaction> getTransactions() {
 		return transactions;
 	}
-	public List<LoanApplication> getLoanApplications(){
+
+	public List<LoanApplication> getLoanApplications() {
 		return loanApplications;
 	}
-	public List<LoanAccount> getLoanAccounts(){
+
+	public List<LoanAccount> getLoanAccounts() {
 		return loanAccounts;
 	}
-	public List<FixedDeposit> getFixedDeposits(){
+
+	public List<FixedDeposit> getFixedDeposits() {
 		return fixedDeposits;
 	}
-	public List<RecurringDeposit> getRecurringDeposits(){
+
+	public List<RecurringDeposit> getRecurringDeposits() {
 		return recurringDeposits;
 	}
-	public void addAccount(Account account){
+
+	public void addAccount(Account account) {
 		accounts.add(account);
 	}
-	public void removeAccount(Account account){
-		if(accounts.contains(account)){
+
+	public void removeAccount(Account account) {
+		if (accounts.contains(account)) {
 			accounts.remove(account);
-		}
-		else{
+		} else {
 			System.out.println("Account does not exist.");
 		}
 	}
-	public void addEmployee(Employee employee){
+
+	public void addEmployee(Employee employee) {
 		employees.add(employee);
 	}
-	public void removeEmployee(Employee employee){
-		if(employees.contains(employee)){
+
+	public void removeEmployee(Employee employee) {
+		if (employees.contains(employee)) {
 			employees.remove(employee);
-		}
-		else{
+		} else {
 			System.out.println("Employee does not exist.");
 		}
 	}
-	public void addCustomer(Customer customer){
+
+	public void addCustomer(Customer customer) {
 		customers.add(customer);
 	}
-	public void addTransaction(Transaction transaction){
+
+	public void addTransaction(Transaction transaction) {
 		transactions.add(transaction);
 	}
-	public void addLoanApplication(LoanApplication loanApplication){
+
+	public void addLoanApplication(LoanApplication loanApplication) {
 		loanApplications.add(loanApplication);
 	}
-	void removeLoanApplication(LoanApplication loanApplication){
-		if(loanApplications.contains(loanApplication)){
+
+	void removeLoanApplication(LoanApplication loanApplication) {
+		if (loanApplications.contains(loanApplication)) {
 			loanApplications.remove(loanApplication);
-		}
-		else{
+		} else {
 			System.out.println("Loan Application does not exist.");
 		}
 	}
-	void addLoanAccount(LoanAccount loanAccount){
+
+	void addLoanAccount(LoanAccount loanAccount) {
 		loanAccounts.add(loanAccount);
 	}
-	void removeLoanAccount(LoanAccount loanAccount){
-		if(loanAccounts.contains(loanAccount)){
+
+	void removeLoanAccount(LoanAccount loanAccount) {
+		if (loanAccounts.contains(loanAccount)) {
 			loanAccounts.remove(loanAccount);
-		}
-		else{
+		} else {
 			System.out.println("Loan Account does not exist.");
 		}
 	}
-	void addFixedDeposit(FixedDeposit fixedDeposit){
+
+	void addFixedDeposit(FixedDeposit fixedDeposit) {
 		fixedDeposits.add(fixedDeposit);
 	}
-	void removeFixedDeposit(FixedDeposit fixedDeposit){
-		if(fixedDeposits.contains(fixedDeposit)){
+
+	void removeFixedDeposit(FixedDeposit fixedDeposit) {
+		if (fixedDeposits.contains(fixedDeposit)) {
 			fixedDeposits.remove(fixedDeposit);
-		}
-		else{
+		} else {
 			System.out.println("Fixed Deposit does not exist.");
 		}
 	}
-	void addRecurringDeposit(RecurringDeposit recurringDeposit){
+
+	void addRecurringDeposit(RecurringDeposit recurringDeposit) {
 		recurringDeposits.add(recurringDeposit);
 	}
-	void removeRecurringDeposit(RecurringDeposit recurringDeposit){
-		if(recurringDeposits.contains(recurringDeposit)){
+
+	void removeRecurringDeposit(RecurringDeposit recurringDeposit) {
+		if (recurringDeposits.contains(recurringDeposit)) {
 			recurringDeposits.remove(recurringDeposit);
-		}
-		else{
+		} else {
 			System.out.println("Recurring Deposit does not exist.");
 		}
 	}
-	void generateBranchReport(){
+
+	void generateBranchReport() {
 		System.out.println("Branch ID: " + branchID);
 		System.out.println("Branch Name: " + branchName);
 		System.out.println("Branch address: " + address);
