@@ -1,7 +1,9 @@
 package com.example.demo.model;
-import java.util.List;
-import java.util.ArrayList;
+
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Customer {
     private String CIF;
     private static long nextID = 1;
@@ -14,7 +16,7 @@ public class Customer {
     private List<LoanAccount> loanAccounts;
 
     public Customer(String name, String address, String phone_no) {
-        CIF  = "CIF" + String.format("%09d", nextID++);
+        CIF = "CIF" + String.format("%09d", nextID++);
         this.name = name;
         this.address = address;
         this.phone_no = phone_no;
@@ -47,7 +49,7 @@ public class Customer {
 
     public void addDebitCard(Account account) {
         if (account != null) {
-            cards.add(new DebitCard(name,account));
+            cards.add(new DebitCard(name, account));
             System.out.println("Debit Card added for account: " + account.getAccountNumber());
         } else {
             System.out.println("Invalid debit card account!");
@@ -55,7 +57,7 @@ public class Customer {
     }
 
     public void addCreditCard(double limit, double interest) {
-        cards.add(new CreditCard(name,limit,interest));
+        cards.add(new CreditCard(name, limit, interest));
         System.out.println("Credit Card added.");
     }
 
@@ -70,8 +72,9 @@ public class Customer {
     public List<Card> getCardDetails() {
         return cards;
     }
+
     public void applyLoan(double amount, String type, LocalDate appDate) {
-        LoanApplication loanApp = new LoanApplication(this,amount, type, appDate);
+        LoanApplication loanApp = new LoanApplication(this, amount, type, appDate);
         loanApplications.add(loanApp);
         System.out.println("Loan application submitted: " + loanApp.getApplicationId());
     }

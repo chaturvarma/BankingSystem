@@ -47,6 +47,11 @@ public class LoanApplication {
     public String getCustomerName(){
             return customer.getName();
     }
+
+    public String getCustomerID() {
+        return customer.getCIF();
+    }
+
     public void updateLoanStatus(String status) {
         this.loanStatus = status;
         if ("Approved".equalsIgnoreCase(status)) {

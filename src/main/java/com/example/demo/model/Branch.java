@@ -118,7 +118,7 @@ public class Branch {
 		loanApplications.add(loanApplication);
 	}
 
-	void removeLoanApplication(LoanApplication loanApplication) {
+	public void removeLoanApplication(LoanApplication loanApplication) {
 		if (loanApplications.contains(loanApplication)) {
 			loanApplications.remove(loanApplication);
 		} else {
@@ -126,11 +126,11 @@ public class Branch {
 		}
 	}
 
-	void addLoanAccount(LoanAccount loanAccount) {
+	public void addLoanAccount(LoanAccount loanAccount) {
 		loanAccounts.add(loanAccount);
 	}
 
-	void removeLoanAccount(LoanAccount loanAccount) {
+	public void removeLoanAccount(LoanAccount loanAccount) {
 		if (loanAccounts.contains(loanAccount)) {
 			loanAccounts.remove(loanAccount);
 		} else {

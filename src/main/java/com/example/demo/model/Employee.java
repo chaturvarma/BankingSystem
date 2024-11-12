@@ -1,7 +1,6 @@
 package com.example.demo.model;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Scanner;
 public class Employee {
     private static long nextID = 1;
     private String employeeId;
@@ -130,19 +129,14 @@ public class Employee {
         this.branch = branch;
     }
 
-    public void verifyLoan(LoanApplication loanApplication) {
+    public void verifyLoan(LoanApplication loanApplication, boolean status) {
         loanApplication.getLoanDetails();
-        Scanner s = new Scanner(System.in);
-        System.out.println("Do you want to verify the Loan Application?\nPress 1 for yes\tPress 0 for no");
-        int input = s.nextInt();
-        boolean setStatus;
-        if(input == 1) setStatus = true;
-        else if (input == 0) setStatus = false;
-        else{
-            System.out.println("Invalid input. Please Try again.");
-            return;
+        loanApplication.updateVerification(status, this);
+        if(status) {
+            System.out.println("The loan has been verified by employee");
+        } else {
+            System.out.println("The loan has been rejected by the employee");
         }
-        loanApplication.updateVerification(setStatus, this);
     }
 
     public void createCreditCard(Account account, String name) {

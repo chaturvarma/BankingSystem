@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,8 @@ import com.example.demo.model.CreditCard;
 import com.example.demo.model.Customer;
 import com.example.demo.model.DebitCard;
 import com.example.demo.model.Employee;
+import com.example.demo.model.LoanAccount;
+import com.example.demo.model.LoanApplication;
 import com.example.demo.model.Manager;
 import com.example.demo.model.SavingsAccount;
 import com.example.demo.model.Transaction;
@@ -538,9 +541,253 @@ public class IndexController {
      * Customer loan applications section
      */
 
+    @GetMapping("/customer/loanapp_list")
+    public String getCustomerLoanApplications(Model model, HttpSession session) {
+        String customerId = (String) session.getAttribute("cid_one");
+
+        if (customerId != null && bank != null) {
+            List<LoanApplication> customerLoanApplications = new ArrayList<>();
+
+            outerLoop: for (Branch branch : bank.getBranches()) {
+                for (Customer customer : branch.getCustomers()) {
+                    if (customer.getCIF().equals(customerId)) {
+                        for (LoanApplication loanApp : branch.getLoanApplications()) {
+                            if (loanApp.getCustomerID().equals(customer.getCIF())) {
+                                customerLoanApplications.add(loanApp);
+                            }
+                        }
+                        break outerLoop;
+                    }
+                }
+            }
+
+            if (!customerLoanApplications.isEmpty()) {
+                model.addAttribute("loanApplications", customerLoanApplications);
+            } else {
+                model.addAttribute("error", "No loan applications found for customer ID " + customerId);
+            }
+        } else {
+            model.addAttribute("error", "Customer ID not found or session is invalid");
+        }
+
+        return "customer/loanapp_list";
+    }
+
+    @GetMapping("/customer/loanapp_info")
+    public String getLoanApplicationInfo(@RequestParam("applicationId") String applicationId, Model model,
+            HttpSession session) {
+        String customerId = (String) session.getAttribute("cid_one");
+
+        if (customerId != null && bank != null) {
+            LoanApplication targetLoanApplication = null;
+
+            outerLoop: for (Branch branch : bank.getBranches()) {
+                for (Customer customer : branch.getCustomers()) {
+                    if (customer.getCIF().equals(customerId)) {
+                        for (LoanApplication loanApp : branch.getLoanApplications()) {
+                            if (loanApp.getApplicationId().equals(applicationId)) {
+                                targetLoanApplication = loanApp;
+                                break outerLoop;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (targetLoanApplication != null) {
+                model.addAttribute("loanApplication", targetLoanApplication);
+            } else {
+                model.addAttribute("error",
+                        "Loan application with ID " + applicationId + " not found for this customer.");
+            }
+        } else {
+            model.addAttribute("error", "Customer ID not found or session is invalid.");
+        }
+
+        return "customer/loanapp_info";
+    }
+
+    @PostMapping("/customer/loanapp_create")
+    public String createLoanApplication(
+            @RequestParam("loanAmount") double loanAmount,
+            @RequestParam("loanType") String loanType,
+            Model model,
+            HttpSession session) {
+
+        String customerId = (String) session.getAttribute("cid_one");
+
+        if (customerId != null && bank != null) {
+            boolean customerFound = false;
+
+            outerLoop: for (Branch branch : bank.getBranches()) {
+                for (Customer customer : branch.getCustomers()) {
+                    if (customer.getCIF().equals(customerId)) {
+                        LocalDate applicationDate = LocalDate.now();
+
+                        LoanApplication newLoanApp = new LoanApplication(customer, loanAmount, loanType,
+                                applicationDate);
+
+                        customer.applyLoan(newLoanApp);
+                        branch.addLoanApplication(newLoanApp);
+
+                        model.addAttribute("heading", "Sucessfully Created Loan Application");
+                        model.addAttribute("message",
+                                "Loan application with application id " + newLoanApp.getApplicationId()
+                                        + " has been created for Customer " + customer.getName()
+                                        + ". Kindly wait for sometime while the application is reviewed");
+
+                        customerFound = true;
+                        break outerLoop;
+                    }
+                }
+            }
+
+            if (!customerFound) {
+                model.addAttribute("error", "Customer not found.");
+            }
+        } else {
+            model.addAttribute("error", "Customer not found or session is invalid.");
+        }
+
+        return "customer/loanapp_create";
+    }
+
     /*
      * Customer loan account section
      */
+
+    @GetMapping("/customer/loans_list")
+    public String getCustomerLoanAccounts(Model model, HttpSession session) {
+        String customerId = (String) session.getAttribute("cid_one");
+
+        if (customerId != null && bank != null) {
+            List<LoanAccount> customerLoanAccounts = new ArrayList<>();
+
+            outerLoop: for (Branch branch : bank.getBranches()) {
+                for (Customer customer : branch.getCustomers()) {
+                    if (customer.getCIF().equals(customerId)) {
+                        for (LoanAccount loanAccount : branch.getLoanAccounts()) {
+                            if (loanAccount.getCustomer().getCIF().equals(customerId)) {
+                                customerLoanAccounts.add(loanAccount);
+                            }
+                        }
+                        break outerLoop;
+                    }
+                }
+            }
+
+            if (!customerLoanAccounts.isEmpty()) {
+                model.addAttribute("loanAccounts", customerLoanAccounts);
+            } else {
+                model.addAttribute("error", "No loan accounts found for customer ID " + customerId);
+            }
+        } else {
+            model.addAttribute("error", "Customer ID not found or session is invalid");
+        }
+
+        return "customer/loans_list";
+    }
+
+    @GetMapping("/customer/loans_info")
+    public String getLoanAccountDetails(
+            @RequestParam("loanId") String loanId,
+            Model model,
+            HttpSession session) {
+
+        String customerId = (String) session.getAttribute("cid_one");
+
+        if (customerId != null && bank != null) {
+            boolean loanFound = false;
+
+            outerLoop: for (Branch branch : bank.getBranches()) {
+                for (Customer customer : branch.getCustomers()) {
+                    if (customer.getCIF().equals(customerId)) {
+
+                        for (LoanAccount loanAcct : branch.getLoanAccounts()) {
+                            if (loanAcct.getLoanId().equals(loanId) &&
+                                    loanAcct.getCustomer().getCIF().equals(customerId)) {
+
+                                model.addAttribute("loanAccount", loanAcct);
+                                loanFound = true;
+                                break outerLoop;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (!loanFound) {
+                model.addAttribute("error", "No loan account found for loan ID " + loanId);
+            }
+        } else {
+            model.addAttribute("error", "Customer ID not found or session is invalid.");
+        }
+
+        return "customer/loans_info";
+    }
+
+    @PostMapping("/customer/loans_payment")
+    public String makeLoanPayment(
+            @RequestParam("amount") Double amount,
+            @RequestParam("loanId") String loanId,
+            Model model,
+            HttpSession session) {
+
+        String customerId = (String) session.getAttribute("cid_one");
+
+        if (customerId != null && bank != null) {
+            boolean paymentSuccessful = false;
+
+            outerLoop: for (Branch branch : bank.getBranches()) {
+                for (Customer customer : branch.getCustomers()) {
+                    if (customer.getCIF().equals(customerId)) {
+
+                        for (LoanAccount loanAcct : branch.getLoanAccounts()) {
+                            if (loanAcct.getLoanId().equals(loanId) &&
+                                    loanAcct.getCustomer().getCIF().equals(customerId)) {
+
+                                if (amount <= 0) {
+                                    model.addAttribute("error", "Invalid payment amount. It must be greater than 0.");
+                                    break outerLoop;
+                                }
+
+                                double oldBalance = loanAcct.getBalance();
+
+                                if (amount > oldBalance) {
+                                    model.addAttribute("error",
+                                            "Payment amount exceeds the remaining balance. Remaining balance: "
+                                                    + oldBalance);
+                                    break outerLoop;
+                                }
+
+                                loanAcct.makePayment(amount);
+
+                                if (loanAcct.getBalance() == oldBalance - amount) {
+                                    paymentSuccessful = true;
+                                    model.addAttribute("heading", "Payment Successful");
+                                    model.addAttribute("message", "Payment of " + amount + " has been made to loan ID "
+                                            + loanId + ". Remaining balance: " + loanAcct.getBalance());
+                                } else {
+                                    model.addAttribute("error", "Error: Balance mismatch after payment.");
+                                }
+
+                                break outerLoop;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (!paymentSuccessful) {
+                model.addAttribute("error",
+                        "No loan account found for loan ID " + loanId + ", or payment could not be processed.");
+            }
+        } else {
+            model.addAttribute("error", "Customer ID not found or session is invalid.");
+        }
+
+        return "customer/loans_payment";
+    }
 
     /*
      * Employee application and routing starts from here
@@ -650,6 +897,86 @@ public class IndexController {
         }
 
         return "employee/customers_info";
+    }
+
+    @GetMapping("/employee/loanapp_list")
+    public String getLoanApplicationsForEmployee(Model model, HttpSession session) {
+        String employeeId = (String) session.getAttribute("eid");
+
+        if (employeeId != null && bank != null) {
+            List<LoanApplication> loanApplicationsForBranch = new ArrayList<>();
+
+            outerLoop: for (Branch branch : bank.getBranches()) {
+                for (Employee employee : branch.getEmployees()) {
+                    if (employee.getEmployeeId().equals(employeeId)) {
+                        loanApplicationsForBranch = branch.getLoanApplications();
+                        break outerLoop;
+                    }
+                }
+            }
+
+            if (!loanApplicationsForBranch.isEmpty()) {
+                model.addAttribute("loanApplications", loanApplicationsForBranch);
+            } else {
+                model.addAttribute("error", "No loan applications found for the employee's branch.");
+            }
+        } else {
+            model.addAttribute("error", "Employee ID not found or session is invalid.");
+        }
+
+        return "employee/loanapp_list";
+    }
+
+    @PostMapping("/employee/loanapp_approve")
+    public String verifyOrRejectLoan(
+            @RequestParam("loanId") String loanId,
+            @RequestParam("action") String action,
+            Model model,
+            HttpSession session) {
+
+        String employeeId = (String) session.getAttribute("eid");
+
+        if (employeeId != null && bank != null) {
+            boolean loanProcessed = false;
+            outerLoop: for (Branch branch : bank.getBranches()) {
+                for (Employee employee : branch.getEmployees()) {
+                    if (employee.getEmployeeId().equals(employeeId)) {
+
+                        for (LoanApplication loanApp : branch.getLoanApplications()) {
+                            if (loanApp.getApplicationId().equals(loanId) && !loanApp.isVerified()) {
+
+                                if ("verify".equalsIgnoreCase(action)) {
+                                    employee.verifyLoan(loanApp, true);
+                                    model.addAttribute("message", "Loan application verified successfully");
+                                } else if ("reject".equalsIgnoreCase(action)) {
+                                    employee.verifyLoan(loanApp, false);
+                                    model.addAttribute("message", "Loan application rejected.");
+                                } else {
+                                    model.addAttribute("error", "Invalid action specified.");
+                                    return "employee/loanapp_approve";
+                                }
+
+                                loanProcessed = true;
+                                break outerLoop;
+                            }
+                        }
+
+                        if (!loanProcessed) {
+                            model.addAttribute("error", "Loan application not found or already verified.");
+                        }
+                        break outerLoop;
+                    }
+                }
+            }
+
+            if (!loanProcessed) {
+                model.addAttribute("error", "Employee not found or loan application not processed.");
+            }
+        } else {
+            model.addAttribute("error", "Employee not found or session is invalid.");
+        }
+
+        return "employee/loanapp_approve";
     }
 
     /*
@@ -790,4 +1117,100 @@ public class IndexController {
         return "manager/employee_salary";
     }
 
+    @GetMapping("/manager/loanapp_list")
+    public String getLoanApplicationsForManager(Model model, HttpSession session) {
+        String managerId = (String) session.getAttribute("mid");
+
+        if (managerId != null && bank != null) {
+            List<LoanApplication> loanApplicationsForBranch = new ArrayList<>();
+
+            outerLoop: for (Branch branch : bank.getBranches()) {
+                for (Employee employee : branch.getEmployees()) {
+                    if (employee.getEmployeeId().equals(managerId)) {
+
+                        for (LoanApplication loanApp : branch.getLoanApplications()) {
+                            if (loanApp.isVerified()) {
+                                loanApplicationsForBranch.add(loanApp);
+                            }
+                        }
+                        break outerLoop;
+                    }
+                }
+            }
+
+            if (!loanApplicationsForBranch.isEmpty()) {
+                model.addAttribute("loanApplications", loanApplicationsForBranch);
+            } else {
+                model.addAttribute("error", "No loan applications found for the employee's branch.");
+            }
+        } else {
+            model.addAttribute("error", "Employee ID not found or session is invalid.");
+        }
+
+        return "employee/loanapp_list";
+    }
+
+    @PostMapping("/manager/loanapp_approve")
+    public String approveLoanApplication(
+            @RequestParam("loanId") String loanId,
+            @RequestParam("interestRate") double interestRate,
+            @RequestParam("loanAmount") double loanAmount,
+            @RequestParam("loanTerm") int loanTerm,
+            Model model,
+            HttpSession session) {
+
+        String managerId = (String) session.getAttribute("mid");
+
+        if (managerId != null && bank != null) {
+            boolean loanApproved = false;
+
+            outerLoop: for (Branch branch : bank.getBranches()) {
+                for (Employee employee : branch.getEmployees()) {
+                    if (employee instanceof Manager && employee.getEmployeeId().equals(managerId)) {
+                        Manager manager = (Manager) employee;
+
+                        for (LoanApplication loanApp : branch.getLoanApplications()) {
+                            if (loanApp.getApplicationId().equals(loanId) && loanApp.isVerified()) {
+
+                                manager.approveLoan(loanApp);
+
+                                Customer customer = null;
+                                for (Customer branchCustomer : branch.getCustomers()) {
+                                    if (branchCustomer.getCIF().equals(loanApp.getCustomerID())) {
+                                        customer = branchCustomer;
+                                        break;
+                                    }
+                                }
+
+                                LocalDate loanStartDate = LocalDate.now();
+                                LoanAccount newLoanAccount = new LoanAccount(
+                                        loanId, customer, loanAmount, interestRate, loanTerm, loanStartDate);
+
+                                branch.addLoanAccount(newLoanAccount);
+
+                                model.addAttribute("message",
+                                        "Loan application approved and loan account created successfully for customer "
+                                                + customer.getName());
+                                loanApproved = true;
+                                break outerLoop;
+                            }
+                        }
+
+                        if (!loanApproved) {
+                            model.addAttribute("error", "Loan application not found or not verified for approval.");
+                        }
+                        break outerLoop;
+                    }
+                }
+            }
+
+            if (!loanApproved) {
+                model.addAttribute("error", "Manager not found or loan application not processed.");
+            }
+        } else {
+            model.addAttribute("error", "Manager not found or session is invalid.");
+        }
+
+        return "manager/loanapp_approve";
+    }
 }

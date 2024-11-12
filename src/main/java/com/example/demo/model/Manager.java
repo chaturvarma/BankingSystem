@@ -1,9 +1,11 @@
 package com.example.demo.model;
+
 import java.util.Date;
+
 public class Manager extends Employee {
 
-    public Manager( String employeeName, Bank bank, Branch branch, double salary,
-                   long phoneNumber, String email, Date joiningDate) {
+    public Manager(String employeeName, Bank bank, Branch branch, double salary,
+            long phoneNumber, String email, Date joiningDate) {
         super(employeeName, bank, branch, "Manager", "Branch", salary, phoneNumber, email, joiningDate);
     }
 
@@ -11,10 +13,12 @@ public class Manager extends Employee {
         if (application != null && !application.getLoanStatus().equalsIgnoreCase("Approved")) {
             if (application.isVerified()) {
                 application.updateLoanStatus("Approved");
-                System.out.println("Loan application for " + application.getCustomerName() + " approved by " + getEmployeeName());
+                System.out.println(
+                        "Loan application for " + application.getCustomerName() + " approved by " + getEmployeeName());
             } else {
                 application.updateLoanStatus("Rejected");
-                System.out.println("Loan application for " + application.getCustomerName() + " rejected by " + getEmployeeName() + " as it is not verified.");
+                System.out.println("Loan application for " + application.getCustomerName() + " rejected by "
+                        + getEmployeeName() + " as it is not verified.");
             }
         } else {
             System.out.println("Loan application is already approved or null.");
