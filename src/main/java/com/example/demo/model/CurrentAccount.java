@@ -1,6 +1,6 @@
 package com.example.demo.model;
 import java.time.LocalDate;
-class CurrentAccount extends Account{
+public class CurrentAccount extends Account{
 	private double overdraftLimit;
 	private double minBalance;
 	private double minBalanceFine;
