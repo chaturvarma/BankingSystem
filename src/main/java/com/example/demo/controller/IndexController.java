@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.model.Account;
 import com.example.demo.model.Bank;
@@ -127,6 +128,11 @@ public class IndexController {
         return "customer/index";
     }
 
+    @GetMapping("/customer/confirmation")
+    public String customerConfirmation() {
+        return "confirmation";
+    }
+
     @GetMapping("/customer/profile")
     public String redirectToCustomerProfile(Model model, HttpSession session) {
         String customerId = (String) session.getAttribute("cid_one");
@@ -237,6 +243,7 @@ public class IndexController {
             @RequestParam("accountId") String accountId,
             @RequestParam("amount") double amount,
             Model model,
+            RedirectAttributes redirectAttributes,
             HttpSession session) {
 
         String customerId = (String) session.getAttribute("cid_one");
@@ -262,15 +269,17 @@ public class IndexController {
                                 double finalBalance = account.getBalance();
 
                                 if (finalBalance == initialBalance + amount) {
-                                    model.addAttribute("transactionId", transaction.getTransactionId());
-                                    model.addAttribute("accountBalance", finalBalance);
-                                    model.addAttribute("amount", amount);
-                                    model.addAttribute("account", account.getAccountNumber());
+                                    redirectAttributes.addFlashAttribute("title", "Amount Successfully Deposited");
+                                    redirectAttributes.addFlashAttribute("message", "₹" + amount +
+                                            " has been successfully deposited to account " + account.getAccountNumber()
+                                            + ". Updated balance: ₹" + finalBalance
+                                            + ". Transaction ID: " + transaction.getTransactionId());
+                                    return "redirect:/customer/confirmation";
                                 } else {
                                     model.addAttribute("error", "Balance verification failed after deposit.");
                                 }
                             } else {
-                                model.addAttribute("error", "Transaction failed");
+                                model.addAttribute("error", "Transaction failed.");
                             }
                         } else {
                             model.addAttribute("error", "Account not found or does not belong to the customer.");
@@ -282,7 +291,6 @@ public class IndexController {
         } else {
             model.addAttribute("error", "Customer not found or session is invalid.");
         }
-
         return "customer/accounts_deposit";
     }
 
@@ -291,6 +299,7 @@ public class IndexController {
             @RequestParam("accountId") String accountId,
             @RequestParam("amount") double amount,
             Model model,
+            RedirectAttributes redirectAttributes,
             HttpSession session) {
 
         String customerId = (String) session.getAttribute("cid_one");
@@ -316,15 +325,18 @@ public class IndexController {
                                 double finalBalance = account.getBalance();
 
                                 if (finalBalance == initialBalance - amount) {
-                                    model.addAttribute("transactionId", transaction.getTransactionId());
-                                    model.addAttribute("accountBalance", finalBalance);
-                                    model.addAttribute("amount", amount);
-                                    model.addAttribute("account", account.getAccountNumber());
+                                    redirectAttributes.addFlashAttribute("title", "Amount Successfully Withdrawn");
+                                    redirectAttributes.addFlashAttribute("message", "₹" + amount +
+                                            " has been successfully withdrawn from account "
+                                            + account.getAccountNumber() +
+                                            ". Updated balance: ₹" + finalBalance + ". Transaction ID: "
+                                            + transaction.getTransactionId());
+                                    return "redirect:/customer/confirmation";
                                 } else {
-                                    model.addAttribute("error", "Balance verification failed after withdrawal");
+                                    model.addAttribute("error", "Balance verification failed after withdrawal.");
                                 }
                             } else {
-                                model.addAttribute("error", "Transaction failed");
+                                model.addAttribute("error", "Transaction failed.");
                             }
                         } else {
                             model.addAttribute("error", "Account not found or does not belong to the customer.");
@@ -336,7 +348,6 @@ public class IndexController {
         } else {
             model.addAttribute("error", "Customer not found or session is invalid.");
         }
-
         return "customer/accounts_withdraw";
     }
 
@@ -346,6 +357,7 @@ public class IndexController {
             @RequestParam("destinationAccountId") String destinationAccountId,
             @RequestParam("amount") double amount,
             Model model,
+            RedirectAttributes redirectAttributes,
             HttpSession session) {
 
         String customerId = (String) session.getAttribute("cid_one");
@@ -388,26 +400,27 @@ public class IndexController {
                     double destinationFinalBalance = destinationAccount.getBalance();
 
                     if (sourceFinalBalance == sourceInitialBalance - (amount + transaction.calculateTransactionFees())
-                            &&
-                            destinationFinalBalance == destinationInitialBalance + amount) {
+                            && destinationFinalBalance == destinationInitialBalance + amount) {
 
-                        model.addAttribute("transactionId", transaction.getTransactionId());
-                        model.addAttribute("sourceAccountBalance", sourceFinalBalance);
-                        model.addAttribute("amount", amount);
-                        model.addAttribute("source", sourceAccount.getAccountNumber());
-                        model.addAttribute("destination", destinationAccount.getAccountNumber());
+                        redirectAttributes.addFlashAttribute("title", "Amount Successfully Transferred");
+                        redirectAttributes.addFlashAttribute("message", "₹" + amount +
+                                " has been successfully transferred from account " + sourceAccount.getAccountNumber() +
+                                " to account " + destinationAccount.getAccountNumber() +
+                                ". Updated balance: ₹" + sourceFinalBalance + ". Transaction ID: "
+                                + transaction.getTransactionId());
+                        return "redirect:/customer/confirmation";
                     } else {
                         model.addAttribute("error", "Balance verification failed after transfer.");
                     }
                 } else {
-                    model.addAttribute("error", "Transaction failed");
+                    model.addAttribute("error", "Transaction failed.");
                 }
             } else {
                 model.addAttribute("error",
                         "Source or destination account not found, or source account does not belong to the customer.");
             }
         } else {
-            model.addAttribute("error", "Customer not found or session is invalid");
+            model.addAttribute("error", "Customer not found or session is invalid.");
         }
 
         return "customer/accounts_payment";
@@ -612,6 +625,7 @@ public class IndexController {
             @RequestParam("loanAmount") double loanAmount,
             @RequestParam("loanType") String loanType,
             Model model,
+            RedirectAttributes redirectAttributes,
             HttpSession session) {
 
         String customerId = (String) session.getAttribute("cid_one");
@@ -619,7 +633,7 @@ public class IndexController {
         if (customerId != null && bank != null) {
             boolean customerFound = false;
 
-            outerLoop: for (Branch branch : bank.getBranches()) {
+            for (Branch branch : bank.getBranches()) {
                 for (Customer customer : branch.getCustomers()) {
                     if (customer.getCIF().equals(customerId)) {
                         LocalDate applicationDate = LocalDate.now();
@@ -630,14 +644,14 @@ public class IndexController {
                         customer.applyLoan(newLoanApp);
                         branch.addLoanApplication(newLoanApp);
 
-                        model.addAttribute("heading", "Sucessfully Created Loan Application");
-                        model.addAttribute("message",
-                                "Loan application with application id " + newLoanApp.getApplicationId()
-                                        + " has been created for Customer " + customer.getName()
-                                        + ". Kindly wait for sometime while the application is reviewed");
+                        redirectAttributes.addFlashAttribute("title", "Successfully Created Loan Application");
+                        redirectAttributes.addFlashAttribute("message",
+                                "Loan application with application ID " + newLoanApp.getApplicationId() +
+                                        " has been created for Customer " + customer.getName() +
+                                        ". Kindly wait for some time while the application is reviewed.");
 
                         customerFound = true;
-                        break outerLoop;
+                        return "redirect:/customer/confirmation";
                     }
                 }
             }
@@ -731,6 +745,7 @@ public class IndexController {
             @RequestParam("amount") Double amount,
             @RequestParam("loanId") String loanId,
             Model model,
+            RedirectAttributes redirectAttributes,
             HttpSession session) {
 
         String customerId = (String) session.getAttribute("cid_one");
@@ -738,7 +753,7 @@ public class IndexController {
         if (customerId != null && bank != null) {
             boolean paymentSuccessful = false;
 
-            outerLoop: for (Branch branch : bank.getBranches()) {
+            for (Branch branch : bank.getBranches()) {
                 for (Customer customer : branch.getCustomers()) {
                     if (customer.getCIF().equals(customerId)) {
 
@@ -748,7 +763,7 @@ public class IndexController {
 
                                 if (amount <= 0) {
                                     model.addAttribute("error", "Invalid payment amount. It must be greater than 0.");
-                                    break outerLoop;
+                                    return "customer/loans_payment";
                                 }
 
                                 double oldBalance = loanAcct.getBalance();
@@ -757,21 +772,22 @@ public class IndexController {
                                     model.addAttribute("error",
                                             "Payment amount exceeds the remaining balance. Remaining balance: "
                                                     + oldBalance);
-                                    break outerLoop;
+                                    return "customer/loans_payment";
                                 }
 
                                 loanAcct.makePayment(amount);
 
                                 if (loanAcct.getBalance() == oldBalance - amount) {
                                     paymentSuccessful = true;
-                                    model.addAttribute("heading", "Payment Successful");
-                                    model.addAttribute("message", "Payment of " + amount + " has been made to loan ID "
-                                            + loanId + ". Remaining balance: " + loanAcct.getBalance());
+                                    redirectAttributes.addFlashAttribute("title", "Payment Successful");
+                                    redirectAttributes.addFlashAttribute("message",
+                                            "Payment of ₹" + amount + " has been made to loan ID " + loanId +
+                                                    ". Remaining balance: ₹" + loanAcct.getBalance());
+                                    return "redirect:/customer/confirmation";
                                 } else {
                                     model.addAttribute("error", "Error: Balance mismatch after payment.");
+                                    return "customer/loans_payment";
                                 }
-
-                                break outerLoop;
                             }
                         }
                     }
@@ -781,9 +797,11 @@ public class IndexController {
             if (!paymentSuccessful) {
                 model.addAttribute("error",
                         "No loan account found for loan ID " + loanId + ", or payment could not be processed.");
+                return "customer/loans_payment";
             }
         } else {
             model.addAttribute("error", "Customer ID not found or session is invalid.");
+            return "customer/loans_payment";
         }
 
         return "customer/loans_payment";
@@ -796,6 +814,11 @@ public class IndexController {
     @GetMapping("/employee")
     public String redirectToEmployeeIndex(Model model, HttpSession session) {
         return "employee/index";
+    }
+
+    @GetMapping("/employee/confirmation")
+    public String employeeConfirmation() {
+        return "confirmation";
     }
 
     @GetMapping("/employee/profile")
@@ -932,6 +955,7 @@ public class IndexController {
             @RequestParam("loanId") String loanId,
             @RequestParam("action") String action,
             Model model,
+            RedirectAttributes redirectAttributes,
             HttpSession session) {
 
         String employeeId = (String) session.getAttribute("eid");
@@ -947,17 +971,21 @@ public class IndexController {
 
                                 if ("verify".equalsIgnoreCase(action)) {
                                     employee.verifyLoan(loanApp, true);
-                                    model.addAttribute("message", "Loan application verified successfully");
+                                    redirectAttributes.addFlashAttribute("title", "Loan Application Verified");
+                                    redirectAttributes.addFlashAttribute("message",
+                                            "Loan application with ID " + loanId + " has been successfully verified.");
                                 } else if ("reject".equalsIgnoreCase(action)) {
                                     employee.verifyLoan(loanApp, false);
-                                    model.addAttribute("message", "Loan application rejected.");
+                                    redirectAttributes.addFlashAttribute("title", "Loan Application Rejected");
+                                    redirectAttributes.addFlashAttribute("message",
+                                            "Loan application with ID " + loanId + " has been rejected.");
                                 } else {
                                     model.addAttribute("error", "Invalid action specified.");
                                     return "employee/loanapp_approve";
                                 }
 
                                 loanProcessed = true;
-                                break outerLoop;
+                                return "redirect:/employee/confirmation";
                             }
                         }
 
@@ -986,6 +1014,11 @@ public class IndexController {
     @GetMapping("/manager")
     public String redirectToManagerIndex(Model model, HttpSession session) {
         return "manager/index";
+    }
+
+    @GetMapping("/manager/confirmation")
+    public String managerConfirmation() {
+        return "confirmation";
     }
 
     @GetMapping("/manager/profile")
@@ -1081,6 +1114,7 @@ public class IndexController {
             @RequestParam("employeeId") String employeeId,
             @RequestParam("newSalary") double newSalary,
             Model model,
+            RedirectAttributes redirectAttributes,
             HttpSession session) {
 
         String managerId = (String) session.getAttribute("mid");
@@ -1094,9 +1128,11 @@ public class IndexController {
                         employee.updateSalary(newSalary);
 
                         if (employee.getSalary() == newSalary) {
-                            model.addAttribute("oldSalary", oldSalary);
-                            model.addAttribute("newSalary", newSalary);
-                            model.addAttribute("employee", employee.getEmployeeName());
+                            redirectAttributes.addFlashAttribute("title", "Salary Update Successful");
+                            redirectAttributes.addFlashAttribute("message", "The salary of employee "
+                                    + employee.getEmployeeName() + " has been updated from ₹" + oldSalary
+                                    + " to ₹" + newSalary);
+                            return "redirect:/manager/confirmation";
                         } else {
                             model.addAttribute("error", "Failed to update salary for Employee ID " + employeeId);
                         }
@@ -1108,10 +1144,10 @@ public class IndexController {
             }
 
             if (!employeeFound) {
-                model.addAttribute("error", "Employee with ID " + employeeId + " not found in the manager's branch");
+                model.addAttribute("error", "Employee with ID " + employeeId + " not found in the manager's branch.");
             }
         } else {
-            model.addAttribute("error", "Manager not found or session is invalid");
+            model.addAttribute("error", "Manager not found or session is invalid.");
         }
 
         return "manager/employee_salary";
@@ -1157,6 +1193,7 @@ public class IndexController {
             @RequestParam("loanAmount") double loanAmount,
             @RequestParam("loanTerm") int loanTerm,
             Model model,
+            RedirectAttributes redirectAttributes,
             HttpSession session) {
 
         String managerId = (String) session.getAttribute("mid");
@@ -1182,16 +1219,25 @@ public class IndexController {
                                     }
                                 }
 
-                                LocalDate loanStartDate = LocalDate.now();
-                                LoanAccount newLoanAccount = new LoanAccount(
-                                        loanId, customer, loanAmount, interestRate, loanTerm, loanStartDate);
+                                if (customer != null) {
+                                    LocalDate loanStartDate = LocalDate.now();
+                                    LoanAccount newLoanAccount = new LoanAccount(
+                                            loanId, customer, loanAmount, interestRate, loanTerm, loanStartDate);
 
-                                branch.addLoanAccount(newLoanAccount);
+                                    branch.addLoanAccount(newLoanAccount);
 
-                                model.addAttribute("message",
-                                        "Loan application approved and loan account created successfully for customer "
-                                                + customer.getName());
-                                loanApproved = true;
+                                    redirectAttributes.addFlashAttribute("title", "Loan Application Approved");
+                                    redirectAttributes.addFlashAttribute("message",
+                                            "Loan application has been approved, "
+                                                    + "and a new loan account has been created for customer "
+                                                    + customer.getName() + ". Loan ID: " + loanId
+                                                    + ", Amount: ₹" + loanAmount + ", Term: " + loanTerm + " months.");
+
+                                    loanApproved = true;
+                                    return "redirect:/manager/confirmation";
+                                } else {
+                                    model.addAttribute("error", "Customer not found for the loan application.");
+                                }
                                 break outerLoop;
                             }
                         }
