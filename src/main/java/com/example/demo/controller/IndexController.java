@@ -120,7 +120,7 @@ public class IndexController {
 
     @GetMapping("/customer/confirmation")
     public String customerConfirmation() {
-        return "confirmation";
+        return "customer/confirmation";
     }
 
     @GetMapping("/customer/profile")
@@ -601,6 +601,7 @@ public class IndexController {
         if (customerId != null && bank != null) {
             LoanApplication targetLoanApplication = null;
 
+            // Loop through branches and customers to find the loan application
             outerLoop: for (Branch branch : bank.getBranches()) {
                 for (Customer customer : branch.getCustomers()) {
                     if (customer.getCIF().equals(customerId)) {
@@ -615,7 +616,23 @@ public class IndexController {
             }
 
             if (targetLoanApplication != null) {
-                model.addAttribute("loanApplication", targetLoanApplication);
+                Map<String, Object> loanAppInfo = new HashMap<>();
+                loanAppInfo.put("applicationId", targetLoanApplication.getApplicationId());
+                loanAppInfo.put("customerName", targetLoanApplication.getCustomerName());
+                loanAppInfo.put("loanType", targetLoanApplication.getLoanType());
+                loanAppInfo.put("loanAmount", targetLoanApplication.getAmount());
+                loanAppInfo.put("loanStatus", targetLoanApplication.getLoanStatus());
+                loanAppInfo.put("applicationDate", targetLoanApplication.getApplicationDate());
+                loanAppInfo.put("approvalDate",
+                        targetLoanApplication.getApprovalDate() != null ? targetLoanApplication.getApprovalDate()
+                                : "Not Approved");
+                loanAppInfo.put("isVerified", targetLoanApplication.isVerified() ? "Yes" : "No");
+                loanAppInfo.put("verifiedBy",
+                        targetLoanApplication.getVerifiedBy() != null
+                                ? targetLoanApplication.getVerifiedBy().getEmployeeName()
+                                : "Not Verified");
+
+                model.addAttribute("loanApplication", loanAppInfo);
             } else {
                 model.addAttribute("error",
                         "Loan application with ID " + applicationId + " not found for this customer.");
@@ -840,7 +857,7 @@ public class IndexController {
 
     @GetMapping("/employee/confirmation")
     public String employeeConfirmation() {
-        return "confirmation";
+        return "employee/confirmation";
     }
 
     @GetMapping("/employee/profile")
@@ -960,12 +977,16 @@ public class IndexController {
                         List<LoanApplication> loanApplications = branch.getLoanApplications();
 
                         for (LoanApplication loanApplication : loanApplications) {
-                            HashMap<String, Object> loanAppData = new HashMap<>();
-                            loanAppData.put("customerName", loanApplication.getCustomer().getName());
-                            loanAppData.put("loanType", loanApplication.getLoanType());
-                            loanAppData.put("loanAmount", loanApplication.getAmount());
-                            loanAppData.put("applicationId", loanApplication.getApplicationId());
-                            loanApplicationsForBranch.add(loanAppData);
+
+                            if (loanApplication.getVerifiedBy() == null
+                                    || loanApplication.getVerifiedBy().getEmployeeName() == null) {
+                                HashMap<String, Object> loanAppData = new HashMap<>();
+                                loanAppData.put("customerName", loanApplication.getCustomer().getName());
+                                loanAppData.put("loanType", loanApplication.getLoanType());
+                                loanAppData.put("loanAmount", loanApplication.getAmount());
+                                loanAppData.put("applicationId", loanApplication.getApplicationId());
+                                loanApplicationsForBranch.add(loanAppData);
+                            }
                         }
 
                         break outerLoop;
@@ -976,7 +997,7 @@ public class IndexController {
             if (!loanApplicationsForBranch.isEmpty()) {
                 model.addAttribute("loanApplications", loanApplicationsForBranch);
             } else {
-                model.addAttribute("error", "No loan applications found for the employee's branch.");
+                model.addAttribute("error", "No unverified loan applications found for the employee's branch.");
             }
         } else {
             model.addAttribute("error", "Employee ID not found or session is invalid.");
@@ -1059,7 +1080,7 @@ public class IndexController {
 
     @GetMapping("/manager/confirmation")
     public String managerConfirmation() {
-        return "confirmation";
+        return "manager/confirmation";
     }
 
     @GetMapping("/manager/profile")
@@ -1218,7 +1239,7 @@ public class IndexController {
                 for (Employee employee : branch.getEmployees()) {
                     if (employee.getEmployeeId().equals(managerId)) {
                         for (LoanApplication loanApp : branch.getLoanApplications()) {
-                            if (loanApp.isVerified()) {
+                            if (loanApp.isVerified() && loanApp.getApprovalDate() == null) {
                                 HashMap<String, Object> loanAppData = new HashMap<>();
                                 loanAppData.put("applicationId", loanApp.getApplicationId());
                                 loanAppData.put("loanType", loanApp.getLoanType());
@@ -1235,10 +1256,10 @@ public class IndexController {
             if (!loanApplicationsForBranch.isEmpty()) {
                 model.addAttribute("loanApplications", loanApplicationsForBranch);
             } else {
-                model.addAttribute("error", "No loan applications found for the employee's branch.");
+                model.addAttribute("error", "No pending loan applications found for the manager's branch.");
             }
         } else {
-            model.addAttribute("error", "Employee ID not found or session is invalid.");
+            model.addAttribute("error", "Manager ID not found or session is invalid.");
         }
 
         return "manager/loanapp_list";

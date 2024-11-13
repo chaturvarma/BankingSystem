@@ -86,4 +86,16 @@ public class LoanApplication {
         return loanType;
     }
 
+    public LocalDate getApplicationDate() {
+        return applicationDate;
+    }
+
+    public LocalDate getApprovalDate() {
+        return approvalDate;
+    }
+
+    public Employee getVerifiedBy() {
+        return verifiedBy;
+    }
+
 }

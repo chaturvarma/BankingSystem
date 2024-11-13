@@ -60,14 +60,14 @@
                         </div>
                         <div class="flex-1 min-w-0">
                             <p class="text-[15px] font-semibold text-gray-900 truncate dark:text-white">
-                                <span th:text="${loanApplication.getCustomerName()}">Customer Name</span>
+                                <span th:text="${loanApplication['customerName']}">Customer Name</span>
                             </p>
                             <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                                <span th:text="${loanApplication.loanType}">Loan Type</span>
+                                <span th:text="${loanApplication['loanType']}">Loan Type</span>
                             </p>
                         </div>
                         <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                            <span th:text="${loanApplication.loanAmount}">$320</span>
+                            <span th:text="${loanApplication['loanAmount']}">$320</span>
                         </div>
                     </div>
                 </li>
@@ -90,65 +90,63 @@
                                 class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
                                 Loan Application ID
                             </th>
-                            <td class="px-6 py-4" th:text="${loanApplication.applicationId}">LAP000000001</td>
+                            <td class="px-6 py-4" th:text="${loanApplication['applicationId']}">LAP000000001</td>
                         </tr>
                         <tr class="bg-blue-500 border-b border-blue-400">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
                                 Customer Name
                             </th>
-                            <td class="px-6 py-4" th:text="${loanApplication.getCustomerName()}">Anish Maganti</td>
+                            <td class="px-6 py-4" th:text="${loanApplication['customerName']}">Anish Maganti</td>
                         </tr>
                         <tr class="bg-blue-500 border-b border-blue-400">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
                                 Loan Type
                             </th>
-                            <td class="px-6 py-4" th:text="${loanApplication.loanType}">Home Loan</td>
+                            <td class="px-6 py-4" th:text="${loanApplication['loanType']}">Home Loan</td>
                         </tr>
                         <tr class="bg-blue-500 border-b border-blue-400">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
                                 Loan Amount
                             </th>
-                            <td class="px-6 py-4" th:text="${loanApplication.loanAmount}">$100000</td>
+                            <td class="px-6 py-4" th:text="${loanApplication['loanAmount']}">100000</td>
                         </tr>
                         <tr class="bg-blue-500 border-b border-blue-400">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
                                 Loan Status
                             </th>
-                            <td class="px-6 py-4" th:text="${loanApplication.loanStatus}">Pending</td>
+                            <td class="px-6 py-4" th:text="${loanApplication['loanStatus']}">Pending</td>
                         </tr>
                         <tr class="bg-blue-500 border-b border-blue-400">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
                                 Application Date
                             </th>
-                            <td class="px-6 py-4" th:text="${loanApplication.applicationDate}">2024-11-13</td>
+                            <td class="px-6 py-4" th:text="${loanApplication['applicationDate']}">2024-11-13</td>
                         </tr>
                         <tr class="bg-blue-500 border-b border-blue-400">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
                                 Approval Date
                             </th>
-                            <td class="px-6 py-4" th:text="${loanApplication.approvalDate}">Not Approved</td>
+                            <td class="px-6 py-4" th:text="${loanApplication['approvalDate']}">Not Approved</td>
                         </tr>
                         <tr class="bg-blue-500 border-b border-blue-400">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
                                 Verified
                             </th>
-                            <td class="px-6 py-4" th:text="${loanApplication.isVerified() ? 'Yes' : 'No'}">No</td>
+                            <td class="px-6 py-4" th:text="${loanApplication['isVerified']}">No</td>
                         </tr>
                         <tr class="bg-blue-500 border-b border-blue-400">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
                                 Verified By
                             </th>
-                            <td class="px-6 py-4"
-                                th:text="${loanApplication.verifiedBy != null ? loanApplication.verifiedBy.getEmployeeName() : 'Not Verified'}">
-                                Not Verified</td>
+                            <td class="px-6 py-4" th:text="${loanApplication['verifiedBy']}">Not Verified</td>
                         </tr>
                     </tbody>
                 </table>
