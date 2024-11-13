@@ -89,12 +89,12 @@
 
             <form id="mainform" action="/manager/loanapp_approve" method="post"
                 class="w-full max-w-[500px] flex flex-col align-middle">
-                <input type="hidden" id="loanId" name="loanId" value="${loanId}" />
+                <input type="hidden" id="loanId" name="loanId" th:value="${loanId}" />
 
                 <div class="mb-6">
                     <input type="text" id="disabled-input" aria-label="disabled input"
                         class="bg-gray-100 border border-gray-300 text-red-600 text-center font-medium text-[15px] rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 px-4 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        value="Currently in Loan application ${loanId}" disabled>
+                        th:value="${'Currently for loan application ' + loanId}" disabled>
                 </div>
                 <div class="mb-6">
                     <input type="number" id="loanAmount" name="loanAmount"

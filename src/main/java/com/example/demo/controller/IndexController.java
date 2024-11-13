@@ -3,7 +3,9 @@ package com.example.demo.controller;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -322,19 +324,13 @@ public class IndexController {
                             Transaction transaction = new Transaction(account, account, "Withdraw", amount);
 
                             if (transaction.processTransaction()) {
-                                double finalBalance = account.getBalance();
-
-                                if (finalBalance == initialBalance - amount) {
-                                    redirectAttributes.addFlashAttribute("title", "Amount Successfully Withdrawn");
-                                    redirectAttributes.addFlashAttribute("message", "₹" + amount +
-                                            " has been successfully withdrawn from account "
-                                            + account.getAccountNumber() +
-                                            ". Updated balance: ₹" + finalBalance + ". Transaction ID: "
-                                            + transaction.getTransactionId());
-                                    return "redirect:/customer/confirmation";
-                                } else {
-                                    model.addAttribute("error", "Balance verification failed after withdrawal.");
-                                }
+                                redirectAttributes.addFlashAttribute("title", "Amount Successfully Withdrawn");
+                                redirectAttributes.addFlashAttribute("message", "₹" + amount +
+                                        " has been successfully withdrawn from account "
+                                        + account.getAccountNumber() +
+                                        ". Updated balance: ₹" + initialBalance + amount + ". Transaction ID: "
+                                        + transaction.getTransactionId());
+                                return "redirect:/customer/confirmation";
                             } else {
                                 model.addAttribute("error", "Transaction failed.");
                             }
@@ -396,28 +392,18 @@ public class IndexController {
             }
 
             if (sourceAccount != null && destinationAccount != null) {
-                double sourceInitialBalance = sourceAccount.getBalance();
-                double destinationInitialBalance = destinationAccount.getBalance();
-
                 Transaction transaction = new Transaction(sourceAccount, destinationAccount, "Transfer", amount);
 
                 if (transaction.processTransaction()) {
                     double sourceFinalBalance = sourceAccount.getBalance();
-                    double destinationFinalBalance = destinationAccount.getBalance();
 
-                    if (sourceFinalBalance == sourceInitialBalance - (amount + transaction.calculateTransactionFees())
-                            && destinationFinalBalance == destinationInitialBalance + amount) {
-
-                        redirectAttributes.addFlashAttribute("title", "Amount Successfully Transferred");
-                        redirectAttributes.addFlashAttribute("message", "₹" + amount +
-                                " has been successfully transferred from account " + sourceAccount.getAccountNumber() +
-                                " to account " + destinationAccount.getAccountNumber() +
-                                ". Updated balance: ₹" + sourceFinalBalance + ". Transaction ID: "
-                                + transaction.getTransactionId());
-                        return "redirect:/customer/confirmation";
-                    } else {
-                        model.addAttribute("error", "Balance verification failed after transfer.");
-                    }
+                    redirectAttributes.addFlashAttribute("title", "Amount Successfully Transferred");
+                    redirectAttributes.addFlashAttribute("message", "₹" + amount +
+                            " has been successfully transferred from account " + sourceAccount.getAccountNumber() +
+                            " to account " + destinationAccount.getAccountNumber() +
+                            ". Updated balance: ₹" + sourceFinalBalance + ". Transaction ID: "
+                            + transaction.getTransactionId());
+                    return "redirect:/customer/confirmation";
                 } else {
                     model.addAttribute("error", "Transaction failed.");
                 }
@@ -432,7 +418,7 @@ public class IndexController {
         return "customer/accounts_payment";
     }
 
-    @GetMapping("/customer/account_transaction")
+    @GetMapping("/customer/accounts_transaction")
     public String getAccountTransactions(
             @RequestParam("accountId") String accountId,
             Model model,
@@ -457,11 +443,21 @@ public class IndexController {
             }
 
             if (targetAccount != null) {
-                ArrayList<Transaction> transactions = targetAccount.getTransactions();
-                model.addAttribute("transactions", transactions);
+                List<Map<String, Object>> transactionsList = new ArrayList<>();
+
+                for (Transaction transaction : targetAccount.getTransactions()) {
+                    Map<String, Object> transactionMap = new HashMap<>();
+                    transactionMap.put("transactionId", transaction.getTransactionId());
+                    transactionMap.put("amount", transaction.getAmount());
+                    transactionMap.put("transactionType", transaction.getTransactionType());
+
+                    transactionsList.add(transactionMap);
+                }
+
+                model.addAttribute("transactions", transactionsList);
                 model.addAttribute("account", targetAccount.getAccountNumber());
                 model.addAttribute("balance", targetAccount.getBalance());
-                model.addAttribute("count", transactions.size());
+                model.addAttribute("count", transactionsList.size());
             } else {
                 model.addAttribute("error", "Account not found or does not belong to the logged-in customer");
             }
@@ -469,7 +465,7 @@ public class IndexController {
             model.addAttribute("error", "Customer not found or session is invalid");
         }
 
-        return "customer/account_transaction";
+        return "customer/accounts_transaction";
     }
 
     /*
@@ -565,14 +561,19 @@ public class IndexController {
         String customerId = (String) session.getAttribute("cid_one");
 
         if (customerId != null && bank != null) {
-            List<LoanApplication> customerLoanApplications = new ArrayList<>();
+            List<Map<String, Object>> customerLoanApplications = new ArrayList<>();
 
             outerLoop: for (Branch branch : bank.getBranches()) {
                 for (Customer customer : branch.getCustomers()) {
                     if (customer.getCIF().equals(customerId)) {
                         for (LoanApplication loanApp : branch.getLoanApplications()) {
                             if (loanApp.getCustomerID().equals(customer.getCIF())) {
-                                customerLoanApplications.add(loanApp);
+                                Map<String, Object> loanAppDetails = new HashMap<>();
+                                loanAppDetails.put("applicationId", loanApp.getApplicationId());
+                                loanAppDetails.put("amount", loanApp.getAmount());
+                                loanAppDetails.put("loanType", loanApp.getLoanType());
+
+                                customerLoanApplications.add(loanAppDetails);
                             }
                         }
                         break outerLoop;
@@ -624,6 +625,11 @@ public class IndexController {
         }
 
         return "customer/loanapp_info";
+    }
+
+    @GetMapping("/customer/loanapp_create")
+    public String showPaymentForm() {
+        return "customer/loanapp_create";
     }
 
     @PostMapping("/customer/loanapp_create")
@@ -681,14 +687,18 @@ public class IndexController {
         String customerId = (String) session.getAttribute("cid_one");
 
         if (customerId != null && bank != null) {
-            List<LoanAccount> customerLoanAccounts = new ArrayList<>();
+            List<Map<String, Object>> customerLoanAccountsList = new ArrayList<>();
 
             outerLoop: for (Branch branch : bank.getBranches()) {
                 for (Customer customer : branch.getCustomers()) {
                     if (customer.getCIF().equals(customerId)) {
                         for (LoanAccount loanAccount : branch.getLoanAccounts()) {
                             if (loanAccount.getCustomer().getCIF().equals(customerId)) {
-                                customerLoanAccounts.add(loanAccount);
+                                Map<String, Object> loanDetails = new HashMap<>();
+                                loanDetails.put("loanId", loanAccount.getLoanId());
+                                loanDetails.put("interestRate", loanAccount.getInterestRate());
+                                loanDetails.put("balance", loanAccount.getBalance());
+                                customerLoanAccountsList.add(loanDetails);
                             }
                         }
                         break outerLoop;
@@ -696,8 +706,8 @@ public class IndexController {
                 }
             }
 
-            if (!customerLoanAccounts.isEmpty()) {
-                model.addAttribute("loanAccounts", customerLoanAccounts);
+            if (!customerLoanAccountsList.isEmpty()) {
+                model.addAttribute("loanAccounts", customerLoanAccountsList);
             } else {
                 model.addAttribute("error", "No loan accounts found for customer ID " + customerId);
             }
@@ -868,15 +878,18 @@ public class IndexController {
             outerLoop: for (Branch branch : bank.getBranches()) {
                 for (Employee employee : branch.getEmployees()) {
                     if (employee.getEmployeeId().equals(employeeId)) {
-                        List<Customer> customers = new ArrayList<>();
+                        List<Map<String, Object>> customersList = new ArrayList<>();
 
                         for (Customer customer : branch.getCustomers()) {
-                            customers.add(customer);
+                            Map<String, Object> customerMap = new HashMap<>();
+                            customerMap.put("cif", customer.getCIF());
+                            customerMap.put("phoneNo", customer.getPhoneNo());
+                            customerMap.put("name", customer.getName());
+
+                            customersList.add(customerMap);
                         }
 
-                        model.addAttribute("customers", customers);
-                        model.addAttribute("branchName", branch.getBranchName());
-
+                        model.addAttribute("customers", customersList);
                         break outerLoop;
                     }
                 }
@@ -939,12 +952,22 @@ public class IndexController {
         String employeeId = (String) session.getAttribute("eid");
 
         if (employeeId != null && bank != null) {
-            List<LoanApplication> loanApplicationsForBranch = new ArrayList<>();
+            List<HashMap<String, Object>> loanApplicationsForBranch = new ArrayList<>();
 
             outerLoop: for (Branch branch : bank.getBranches()) {
                 for (Employee employee : branch.getEmployees()) {
                     if (employee.getEmployeeId().equals(employeeId)) {
-                        loanApplicationsForBranch = branch.getLoanApplications();
+                        List<LoanApplication> loanApplications = branch.getLoanApplications();
+
+                        for (LoanApplication loanApplication : loanApplications) {
+                            HashMap<String, Object> loanAppData = new HashMap<>();
+                            loanAppData.put("customerName", loanApplication.getCustomer().getName());
+                            loanAppData.put("loanType", loanApplication.getLoanType());
+                            loanAppData.put("loanAmount", loanApplication.getAmount());
+                            loanAppData.put("applicationId", loanApplication.getApplicationId());
+                            loanApplicationsForBranch.add(loanAppData);
+                        }
+
                         break outerLoop;
                     }
                 }
@@ -1068,19 +1091,26 @@ public class IndexController {
         return "manager/profile";
     }
 
-    @GetMapping("/manager/employee_list")
+    @GetMapping("/manager/employees_list")
     public String getEmployeesOfManagerBranch(Model model, HttpSession session) {
         String managerId = (String) session.getAttribute("mid");
 
         if (managerId != null && bank != null) {
-            List<Employee> employeeList = new ArrayList<>();
-            outerLoop: for (Branch branch : bank.getBranches()) {
+            List<HashMap<String, Object>> employeeList = new ArrayList<>();
+
+            for (Branch branch : bank.getBranches()) {
                 for (Employee employee : branch.getEmployees()) {
                     if (employee instanceof Manager && employee.getEmployeeId().equals(managerId)) {
-                        continue outerLoop;
+                        continue;
                     }
 
-                    employeeList.add(employee);
+                    HashMap<String, Object> employeeData = new HashMap<>();
+                    employeeData.put("employeeName", employee.getEmployeeName());
+                    employeeData.put("designation", employee.getDesignation());
+                    employeeData.put("salary", employee.getSalary());
+                    employeeData.put("employeeId", employee.getEmployeeId());
+
+                    employeeList.add(employeeData);
                 }
             }
 
@@ -1089,7 +1119,7 @@ public class IndexController {
             model.addAttribute("error", "Manager not found or session is invalid");
         }
 
-        return "manager/employee_list";
+        return "manager/employees_list";
     }
 
     @GetMapping("/manager/employee_info")
@@ -1182,15 +1212,19 @@ public class IndexController {
         String managerId = (String) session.getAttribute("mid");
 
         if (managerId != null && bank != null) {
-            List<LoanApplication> loanApplicationsForBranch = new ArrayList<>();
+            List<HashMap<String, Object>> loanApplicationsForBranch = new ArrayList<>();
 
             outerLoop: for (Branch branch : bank.getBranches()) {
                 for (Employee employee : branch.getEmployees()) {
                     if (employee.getEmployeeId().equals(managerId)) {
-
                         for (LoanApplication loanApp : branch.getLoanApplications()) {
                             if (loanApp.isVerified()) {
-                                loanApplicationsForBranch.add(loanApp);
+                                HashMap<String, Object> loanAppData = new HashMap<>();
+                                loanAppData.put("applicationId", loanApp.getApplicationId());
+                                loanAppData.put("loanType", loanApp.getLoanType());
+                                loanAppData.put("loanAmount", loanApp.getAmount());
+
+                                loanApplicationsForBranch.add(loanAppData);
                             }
                         }
                         break outerLoop;
@@ -1207,7 +1241,7 @@ public class IndexController {
             model.addAttribute("error", "Employee ID not found or session is invalid.");
         }
 
-        return "employee/loanapp_list";
+        return "manager/loanapp_list";
     }
 
     @GetMapping("/manager/loanapp_approve")

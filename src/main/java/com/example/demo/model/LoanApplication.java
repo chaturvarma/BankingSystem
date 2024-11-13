@@ -48,6 +48,10 @@ public class LoanApplication {
             return customer.getName();
     }
 
+    public Customer getCustomer() {
+        return customer;
+    }
+
     public String getCustomerID() {
         return customer.getCIF();
     }
@@ -72,6 +76,14 @@ public class LoanApplication {
     }
     public String getApplicationId() {
       return applicationId;
+    }
+
+    public double getAmount() {
+        return loanAmount;
+    }
+
+    public String getLoanType() {
+        return loanType;
     }
 
 }

@@ -68,8 +68,8 @@
                                 Debit Card
                             </p>
                         </div>
-                        <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover"
-                            data-dropdown-trigger="hover"
+                        <button th:id="'dropdownHoverButton-' + ${iterStat.index}"
+                            th:data-dropdown-toggle="'dropdownHover-' + ${iterStat.index}" data-dropdown-trigger="hover"
                             class="text-white bg-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                             type="button">
                             <svg class="w-3 h-3 pt-0.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -78,12 +78,12 @@
                                     stroke-width="2" d="m1 1 4 4 4-4" />
                             </svg>
                         </button>
-                        <div id="dropdownHover"
+                        <div th:id="'dropdownHover-' + ${iterStat.index}"
                             class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
                             <ul class="py-2 text-sm text-gray-900 dark:text-gray-200"
-                                aria-labelledby="dropdownHoverButton">
+                                th:attr="aria-labelledby='dropdownHoverButton-' + ${iterStat.index}">
                                 <li>
-                                    <a href="/customer/cards_info?cardNumber=${card.cardNumber}"
+                                    <a th:href="${'/customer/cards_info?cardNumber=' + card.cardNumber}"
                                         class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Card
                                         Info</a>
                                 </li>

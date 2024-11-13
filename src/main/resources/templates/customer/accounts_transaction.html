@@ -60,9 +60,10 @@
                         </div>
                         <div class="flex-1 min-w-0">
                             <p class="text-[15px] font-semibold text-gray-900 truncate dark:text-white">
-                                account ID: <span th:text="${account}">Account ID</span>
+                                account <span th:text="${account}">Account ID</span>
                             </p>
-                            <p th:text="${count} + 'Transactions'" class="text-sm text-gray-500 truncate dark:text-gray-400"></p>
+                            <p th:text="${count} + ' Transactions'"
+                                class="text-sm text-gray-500 truncate dark:text-gray-400"></p>
                         </div>
                         <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
                             ₹<span th:text="${balance}">Balance</span>
@@ -74,49 +75,21 @@
                 <table class="w-full text-base text-left rtl:text-right text-white dark:text-blue-100">
                     <thead class="text-[13px] text-white uppercase bg-blue-600 dark:text-white">
                         <tr>
-                            <th scope="col" class="px-6 py-3">
-                                Title
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Details
-                            </th>
+                            <th scope="col" class="px-6 py-3">Transaction ID</th>
+                            <th scope="col" class="px-6 py-3">Amount</th>
+                            <th scope="col" class="px-6 py-3">Type</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="transaction : ${transactions}" class="bg-blue-500 border-b border-blue-400">
-                            <th scope="row"
-                                class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
-                                Transaction ID
-                            </th>
-                            <td class="px-6 py-4">
-                                <span th:text="${transaction.transactionId}">Transaction ID</span>
+                            <td class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
+                                <span th:text="${transaction['transactionId']}">Transaction ID</span>
                             </td>
-                        </tr>
-                        <tr th:each="transaction : ${transactions}" class="bg-blue-500 border-b border-blue-400">
-                            <th scope="row"
-                                class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
-                                Amount
-                            </th>
                             <td class="px-6 py-4">
-                                <span th:text="${transaction.amount}">Amount</span>
+                                <span th:text="${transaction['amount']}">Amount</span>
                             </td>
-                        </tr>
-                        <tr th:each="transaction : ${transactions}" class="bg-blue-500 border-b border-blue-400">
-                            <th scope="row"
-                                class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
-                                Type
-                            </th>
                             <td class="px-6 py-4">
-                                <span th:text="${transaction.type}">Type</span>
-                            </td>
-                        </tr>
-                        <tr th:each="transaction : ${transactions}" class="bg-blue-500 border-b border-blue-400">
-                            <th scope="row"
-                                class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
-                                Date
-                            </th>
-                            <td class="px-6 py-4">
-                                <span th:text="${transaction.date}">Date</span>
+                                <span th:text="${transaction['transactionType']}">Type</span>
                             </td>
                         </tr>
                     </tbody>

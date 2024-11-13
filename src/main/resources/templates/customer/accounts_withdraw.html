@@ -50,6 +50,7 @@
                 View and manage all accounts with key details like names, numbers, types, and balances. Easily search
                 and filter for quick access to account information
             </p>
+            <p th:text="${error}" th:if="${error}"></p>
 
             <ol class="flex items-center w-full mt-8 mb-6 max-w-[500px] gap-0">
                 <li
@@ -88,12 +89,12 @@
             </ol>
             <form id="mainform" action="/customer/accounts_withdraw" method="post"
                 class="w-full max-w-[500px] flex flex-col align-middle">
-                <input type="hidden" id="accountId" name="accountId" value="${accountId}" />
+                <input type="hidden" id="accountId" name="accountId" th:value="${accountId}" />
                 
                 <div class="mb-6">
                     <input type="text" id="disabled-input" aria-label="disabled input"
                         class="bg-gray-100 border border-gray-300 text-red-600 text-center font-medium text-[15px] rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 px-4 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        value="Currently in account ${accountId}" disabled>
+                        th:value="${'Currently in account ' + accountId}" disabled>
                 </div>
                 <div class="mb-6">
                     <input type="number" id="amount" name="amount"

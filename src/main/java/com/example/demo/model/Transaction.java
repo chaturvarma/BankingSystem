@@ -1,6 +1,6 @@
 package com.example.demo.model;
-import java.time.LocalTime;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Transaction {
     private static int transactionCounter = 0;
@@ -120,6 +120,10 @@ public class Transaction {
 
     public String getTransactionId() {
         return transactionId;
+    }
+
+    public Double getAmount() {
+        return amount;
     }
 
     public String getTransactionType() {

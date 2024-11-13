@@ -51,7 +51,8 @@
                 dates. Track progress and filter based on specific criteria
             </p>
             <ul class="w-full max-w-[550px] mt-11 flex flex-col align-middle">
-                <li th:each="loanApp : ${loanApplications}" class="bg-white p-4 border border-gray-200 rounded-xl mb-5">
+                <li th:each="loanApp, iterStat : ${loanApplications}"
+                    class="bg-white p-4 border border-gray-200 rounded-xl mb-5">
                     <div class="flex items-center space-x-4 rtl:space-x-reverse">
                         <div class="flex-shrink-0">
                             <img class="w-8 h-8 rounded-full"
@@ -60,17 +61,20 @@
                         </div>
                         <div class="flex-1 min-w-0 text-blue-600">
                             <p class="text-base font-semibold text-gray-900 truncate dark:text-white">
-                                <span th:text="${loanApp.loanNumber}">Loan Number</span>
+                                <!-- Loan Application ID -->
+                                <span th:text="${loanApp['applicationId']}">Loan Number</span>
                             </p>
                             <p class="text-sm font-normal text-gray-500 truncate dark:text-gray-400 mt-0.5">
-                                <span th:text="${loanApp.loanType}">Loan Type</span>
+                                <!-- Loan Type -->
+                                <span th:text="${loanApp['loanType']}">Loan Type</span>
                             </p>
                         </div>
                         <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                            <span th:text="${loanApp.loanAmount}">₹3200</span>
+                            <!-- Loan Amount -->
+                            <span th:text="'₹' + ${loanApp['amount']}">₹3200</span>
                         </div>
-                        <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover"
-                            data-dropdown-trigger="hover"
+                        <button th:id="'dropdownHoverButton-' + ${iterStat.index}"
+                            th:data-dropdown-toggle="'dropdownHover-' + ${iterStat.index}" data-dropdown-trigger="hover"
                             class="text-white bg-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                             type="button">
                             <svg class="w-3 h-3 pt-0.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -79,12 +83,12 @@
                                     stroke-width="2" d="m1 1 4 4 4-4" />
                             </svg>
                         </button>
-                        <div id="dropdownHover"
+                        <div th:id="'dropdownHover-' + ${iterStat.index}"
                             class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
                             <ul class="py-2 text-sm text-gray-900 dark:text-gray-200"
-                                aria-labelledby="dropdownHoverButton">
+                                th:attr="aria-labelledby='dropdownHoverButton-' + ${iterStat.index}">
                                 <li>
-                                    <a th:href="/customer/loanapp_info?applicationId=${loanApp.loanNumber}"
+                                    <a th:href="${'/customer/loanapp_info?applicationId=' + loanApp['applicationId']}"
                                         class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Application
                                         Info</a>
                                 </li>
