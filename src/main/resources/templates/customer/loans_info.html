@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Loans Info - SKCAB Customer</title>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
@@ -42,7 +43,8 @@
                     </li>
                 </ol>
             </nav>
-            <h1 class="mb-4 mt-7 text-center font-[Arial] text-4xl font-bold text-gray-900 dark:text-white">Loan Information</h1>
+            <h1 class="mb-4 mt-7 text-center font-[Arial] text-4xl font-bold text-gray-900 dark:text-white">Loan
+                Information</h1>
             <p
                 class="text-[17px] text-center font-normal max-w-[800px] text-gray-500 dark:text-gray-400 leading-relaxed">
                 View and manage all loan accounts with key details like names, numbers, types, and balances. Easily
@@ -54,18 +56,21 @@
                         <div class="flex-shrink-0">
                             <img class="w-8 h-8 rounded-full"
                                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ0FpBg5Myb9CQ-bQpFou9BY9JXoRG6208_Q&s"
-                                alt="Neil image">
+                                alt="Loan Image">
                         </div>
                         <div class="flex-1 min-w-0">
-                            <p class="text-[15px] font-semibold text-gray-900 truncate dark:text-white">
-                                Lord Thati
+                            <p class="text-[15px] font-semibold text-gray-900 truncate dark:text-white"
+                                th:text="${loanAccount.customer.name}">
+                                Customer Name
                             </p>
-                            <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                                Current account
+                            <p class="text-sm text-gray-500 truncate dark:text-gray-400"
+                                th:text="${loanAccount.interestRate + '% Interest'}">
+                                Interest
                             </p>
                         </div>
-                        <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                            $320
+                        <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white"
+                            th:text="'$' + ${loanAccount.balance}">
+                            Loan Amount
                         </div>
                     </div>
                 </li>
@@ -86,28 +91,82 @@
                         <tr class="bg-blue-500 border-b border-blue-400">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
-                                Name
+                                Loan ID
                             </th>
-                            <td class="px-6 py-4">
-                                Anish Maganti
+                            <td class="px-6 py-4" th:text="${loanAccount.loanId}">
+                                Loan ID
                             </td>
                         </tr>
                         <tr class="bg-blue-500 border-b border-blue-400">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
-                                Email
+                                Customer Name
                             </th>
-                            <td class="px-6 py-4">
-                                se22uari018@mahindrauniversity.edu.in
+                            <td class="px-6 py-4" th:text="${loanAccount.customer.name}">
+                                Customer Name
                             </td>
                         </tr>
                         <tr class="bg-blue-500 border-b border-blue-400">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
-                                Balance
+                                Loan Amount
                             </th>
-                            <td class="px-6 py-4">
-                                200
+                            <td class="px-6 py-4" th:text="'$' + ${loanAccount.loanAmount}">
+                                Loan Amount
+                            </td>
+                        </tr>
+                        <tr class="bg-blue-500 border-b border-blue-400">
+                            <th scope="row"
+                                class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
+                                Balance to be paid
+                            </th>
+                            <td class="px-6 py-4" th:text="'$' + ${loanAccount.balance}">
+                                Loan Amount
+                            </td>
+                        </tr>
+                        <tr class="bg-blue-500 border-b border-blue-400">
+                            <th scope="row"
+                                class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
+                                Interest Rate
+                            </th>
+                            <td class="px-6 py-4" th:text="${loanAccount.interestRate + '%'}">
+                                Interest Rate
+                            </td>
+                        </tr>
+                        <tr class="bg-blue-500 border-b border-blue-400">
+                            <th scope="row"
+                                class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
+                                Application Date
+                            </th>
+                            <td class="px-6 py-4" th:text="${loanAccount.loanStart}">
+                                Application Date
+                            </td>
+                        </tr>
+                        <tr class="bg-blue-500 border-b border-blue-400">
+                            <th scope="row"
+                                class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
+                                Loan Term
+                            </th>
+                            <td class="px-6 py-4" th:text="${loanAccount.loanTerm}">
+                                Term
+                            </td>
+                        </tr>
+                        <tr class="bg-blue-500 border-b border-blue-400">
+                            <th scope="row"
+                                class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
+                                Installment
+                            </th>
+                            <td class="px-6 py-4" th:text="${loanAccount.installment}">
+                                Installment
+                            </td>
+                        </tr>
+                        <tr class="bg-blue-500 border-b border-blue-400">
+                            <th scope="row"
+                                class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
+                                Status
+                            </th>
+                            <td class="px-6 py-4" th:text="${loanAccount.status}">
+                                Status
                             </td>
                         </tr>
                     </tbody>

@@ -57,8 +57,10 @@ public class IndexController {
 
             SavingsAccount savingsAccount1 = new SavingsAccount(customer1, branch, 1000.0, 5000.0, 5);
             SavingsAccount savingsAccount2 = new SavingsAccount(customer2, branch, 1500.0, 7000.0, 5);
+            SavingsAccount savingsAccount3 = new SavingsAccount(customer1, branch, 1500.0, 7000.0, 5);
             customer1.addAccount(savingsAccount1);
             customer2.addAccount(savingsAccount2);
+            customer1.addAccount(savingsAccount3);
 
             customer1.addDebitCard(savingsAccount1);
             customer2.addDebitCard(savingsAccount2);
@@ -75,20 +77,6 @@ public class IndexController {
 
                 session.setAttribute("cid_one", firstCustomer.getCIF());
                 session.setAttribute("cid_two", secondCustomer.getCIF());
-
-                if (!firstCustomer.getAccountDetails().isEmpty()) {
-                    Account firstCustomerAccount = firstCustomer.getAccountDetails().get(0);
-                    session.setAttribute("acc_one", firstCustomerAccount.getAccountNumber());
-                } else {
-                    session.setAttribute("acc_one", "No account found for first customer");
-                }
-
-                if (!secondCustomer.getAccountDetails().isEmpty()) {
-                    Account secondCustomerAccount = secondCustomer.getAccountDetails().get(0);
-                    session.setAttribute("acc_two", secondCustomerAccount.getAccountNumber());
-                } else {
-                    session.setAttribute("acc_two", "No account found for second customer");
-                }
             }
 
             List<Manager> managers = new ArrayList<>();
@@ -238,6 +226,12 @@ public class IndexController {
         return "customer/accounts_info";
     }
 
+    @GetMapping("/customer/accounts_deposit")
+    public String showDepositForm(@RequestParam("accountId") String accountId, Model model) {
+        model.addAttribute("accountId", accountId);
+        return "customer/accounts_deposit";
+    }
+
     @PostMapping("/customer/accounts_deposit")
     public String depositToAccount(
             @RequestParam("accountId") String accountId,
@@ -292,6 +286,12 @@ public class IndexController {
             model.addAttribute("error", "Customer not found or session is invalid.");
         }
         return "customer/accounts_deposit";
+    }
+
+    @GetMapping("/customer/accounts_withdraw")
+    public String showWithdrawForm(@RequestParam("accountId") String accountId, Model model) {
+        model.addAttribute("accountId", accountId);
+        return "customer/accounts_withdraw";
     }
 
     @PostMapping("/customer/accounts_withdraw")
@@ -349,6 +349,12 @@ public class IndexController {
             model.addAttribute("error", "Customer not found or session is invalid.");
         }
         return "customer/accounts_withdraw";
+    }
+
+    @GetMapping("/customer/accounts_payment")
+    public String showPaymentForm(@RequestParam("accountId") String accountId, Model model) {
+        model.addAttribute("accountId", accountId);
+        return "customer/accounts_payment";
     }
 
     @PostMapping("/customer/accounts_payment")
@@ -740,6 +746,12 @@ public class IndexController {
         return "customer/loans_info";
     }
 
+    @GetMapping("/customer/loans_payment")
+    public String showLoanPaymentForm(@RequestParam("loanId") String accountId, Model model) {
+        model.addAttribute("loanId", accountId);
+        return "customer/loans_payment";
+    }
+
     @PostMapping("/customer/loans_payment")
     public String makeLoanPayment(
             @RequestParam("amount") Double amount,
@@ -950,6 +962,12 @@ public class IndexController {
         return "employee/loanapp_list";
     }
 
+    @GetMapping("/employee/loanapp_approve")
+    public String showLoanApp(@RequestParam("loanId") String accountId, Model model) {
+        model.addAttribute("loanId", accountId);
+        return "employee/loanapp_approve";
+    }
+
     @PostMapping("/employee/loanapp_approve")
     public String verifyOrRejectLoan(
             @RequestParam("loanId") String loanId,
@@ -1109,6 +1127,12 @@ public class IndexController {
         return "manager/employee_info";
     }
 
+    @GetMapping("/manager/employee_salary")
+    public String showEmployeeApp(@RequestParam("employeeId") String accountId, Model model) {
+        model.addAttribute("employeeId", accountId);
+        return "manager/employee_salary";
+    }
+
     @PostMapping("/manager/employee_salary")
     public String updateEmployeeSalary(
             @RequestParam("employeeId") String employeeId,
@@ -1184,6 +1208,12 @@ public class IndexController {
         }
 
         return "employee/loanapp_list";
+    }
+
+    @GetMapping("/manager/loanapp_approve")
+    public String showManLoanApp(@RequestParam("loanId") String accountId, Model model) {
+        model.addAttribute("loanId", accountId);
+        return "manager/loanapp_approve";
     }
 
     @PostMapping("/manager/loanapp_approve")

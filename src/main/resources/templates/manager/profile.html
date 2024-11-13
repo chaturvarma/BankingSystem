@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Profile - SKCAB Manager</title>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
@@ -55,19 +56,16 @@
                         <div class="flex-shrink-0">
                             <img class="w-8 h-8 rounded-full"
                                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ0FpBg5Myb9CQ-bQpFou9BY9JXoRG6208_Q&s"
-                                alt="Neil image">
+                                alt="Manager profile image">
                         </div>
                         <div class="flex-1 min-w-0">
-                            <p class="text-[15px] font-semibold text-gray-900 truncate dark:text-white">
-                                Full Name
-                            </p>
-                            <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                                +91 987654321
-                            </p>
+                            <p class="text-[15px] font-semibold text-gray-900 truncate dark:text-white"
+                                th:text="${mname}">Full Name</p>
+                            <p class="text-sm text-gray-500 truncate dark:text-gray-400" th:text="${mphone}">Phone
+                                Number</p>
                         </div>
-                        <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                            4
-                        </div>
+                        <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white"
+                            th:text="${mid}">Manager ID</div>
                     </div>
                 </li>
             </ul>
@@ -87,29 +85,58 @@
                         <tr class="bg-blue-500 border-b border-blue-400">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
-                                Name
+                                Employee ID
                             </th>
-                            <td class="px-6 py-4">
-                                Anish Maganti
-                            </td>
+                            <td class="px-6 py-4" th:text="${mid}">SE22UARI018</td>
+                        </tr>
+                        <tr class="bg-blue-500 border-b border-blue-400">
+                            <th scope="row"
+                                class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
+                                Full Name
+                            </th>
+                            <td class="px-6 py-4" th:text="${mname}">Anish Maganti</td>
                         </tr>
                         <tr class="bg-blue-500 border-b border-blue-400">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
                                 Email
                             </th>
-                            <td class="px-6 py-4">
-                                se22uari018@mahindrauniversity.edu.in
-                            </td>
+                            <td class="px-6 py-4" th:text="${memail}">se22uari018@mahindrauniversity.edu.in</td>
                         </tr>
                         <tr class="bg-blue-500 border-b border-blue-400">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
-                                Balance
+                                Phone Number
                             </th>
-                            <td class="px-6 py-4">
-                                200
-                            </td>
+                            <td class="px-6 py-4" th:text="${mphone}">+91 123456789</td>
+                        </tr>
+                        <tr class="bg-blue-500 border-b border-blue-400">
+                            <th scope="row"
+                                class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
+                                Designation
+                            </th>
+                            <td class="px-6 py-4" th:text="${mdesignation}">Manager</td>
+                        </tr>
+                        <tr class="bg-blue-500 border-b border-blue-400">
+                            <th scope="row"
+                                class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
+                                Salary
+                            </th>
+                            <td class="px-6 py-4" th:text="${msalary}">50000</td>
+                        </tr>
+                        <tr class="bg-blue-500 border-b border-blue-400">
+                            <th scope="row"
+                                class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
+                                Joining Date
+                            </th>
+                            <td class="px-6 py-4" th:text="${mjoin}">2022-01-15</td>
+                        </tr>
+                        <tr class="bg-blue-500 border-b border-blue-400">
+                            <th scope="row"
+                                class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
+                                Branch
+                            </th>
+                            <td class="px-6 py-4" th:text="${mbranch}">Main Branch</td>
                         </tr>
                     </tbody>
                 </table>

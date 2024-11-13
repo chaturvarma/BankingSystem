@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Card Info - SKCAB Customer</title>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
@@ -42,7 +43,8 @@
                     </li>
                 </ol>
             </nav>
-            <h1 class="mb-4 mt-7 text-center font-[Arial] text-4xl font-bold text-gray-900 dark:text-white">Card Information</h1>
+            <h1 class="mb-4 mt-7 text-center font-[Arial] text-4xl font-bold text-gray-900 dark:text-white">Card
+                Information</h1>
             <p
                 class="text-[17px] text-center font-normal max-w-[800px] text-gray-500 dark:text-gray-400 leading-relaxed">
                 View and manage all accounts with key details like names, numbers, types, and balances. Easily search
@@ -54,18 +56,18 @@
                         <div class="flex-shrink-0">
                             <img class="w-8 h-8 rounded-full"
                                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ0FpBg5Myb9CQ-bQpFou9BY9JXoRG6208_Q&s"
-                                alt="Neil image">
+                                alt="Card image">
                         </div>
                         <div class="flex-1 min-w-0">
                             <p class="text-[15px] font-semibold text-gray-900 truncate dark:text-white">
-                                Lord Thati
+                                <span th:text="${name}">Card Holder Name</span>
                             </p>
                             <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                                Current account
+                                <span th:text="${card}">Card Number</span>
                             </p>
                         </div>
                         <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                            $320
+                            <span th:text="${cardType}">Card Type</span>
                         </div>
                     </div>
                 </li>
@@ -86,28 +88,55 @@
                         <tr class="bg-blue-500 border-b border-blue-400">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
-                                Name
+                                Card Holder
                             </th>
                             <td class="px-6 py-4">
-                                Anish Maganti
+                                <span th:text="${name}">Name</span>
                             </td>
                         </tr>
                         <tr class="bg-blue-500 border-b border-blue-400">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
-                                Email
+                                Card Number
                             </th>
                             <td class="px-6 py-4">
-                                se22uari018@mahindrauniversity.edu.in
+                                <span th:text="${card}">Card Number</span>
                             </td>
                         </tr>
                         <tr class="bg-blue-500 border-b border-blue-400">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
-                                Balance
+                                Card Type
                             </th>
                             <td class="px-6 py-4">
-                                200
+                                <span th:text="${cardType}">Card Type</span>
+                            </td>
+                        </tr>
+                        <tr class="bg-blue-500 border-b border-blue-400">
+                            <th scope="row"
+                                class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
+                                Expiry Date
+                            </th>
+                            <td class="px-6 py-4">
+                                <span th:text="${expiry}">Expiry Date</span>
+                            </td>
+                        </tr>
+                        <tr class="bg-blue-500 border-b border-blue-400">
+                            <th scope="row"
+                                class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
+                                Status
+                            </th>
+                            <td class="px-6 py-4">
+                                <span th:text="${status}">Status</span>
+                            </td>
+                        </tr>
+                        <tr class="bg-blue-500 border-b border-blue-400">
+                            <th scope="row"
+                                class="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-blue-100">
+                                CVV
+                            </th>
+                            <td class="px-6 py-4">
+                                <span th:text="${cvv}">CVV</span>
                             </td>
                         </tr>
                     </tbody>

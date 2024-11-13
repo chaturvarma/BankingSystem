@@ -86,27 +86,25 @@
                     </div>
                 </li>
             </ol>
+            <form id="mainform" action="/customer/accounts_deposit" method="post"
+                class="w-full max-w-[500px] flex flex-col align-middle">
+                <input type="hidden" id="accountId" name="accountId" value="${accountId}" />
 
-            <form id="mainform" class="w-full max-w-[500px] flex flex-col align-middle">
                 <div class="mb-6">
-                    <input type="text" id="disabled-input" aria-label="disabled input"
+                    <input type="text" id="account-display" aria-label="account display"
                         class="bg-gray-100 border border-gray-300 text-red-600 text-center font-medium text-[15px] rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 px-4 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        value="Currently in account 123456" disabled>
+                        value="Currently in account ${accountId}" disabled>
                 </div>
                 <div class="mb-6">
-                    <input type="email" id="email"
+                    <input type="number" id="amount" name="amount"
                         class="bg-white border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 px-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Enter the deposit amount" required />
                 </div>
-                <div class="mb-6">
-                    <input type="email" id="email"
-                        class="bg-white border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 px-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Enter loan account ID" required />
-                </div>
                 <div class="flex flex-row items-center w-full gap-5 mt-0.5">
-                    <button type="button"
+                    <button type="button" onclick="window.history.back();"
                         class="w-1/2 text-white bg-black hover:bg-black focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-3 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Cancel</button>
-                    <button type="button"
+
+                    <button type="submit"
                         class="w-1/2 text-white bg-[#2557D6] hover:bg-[#2557D6]/90 focus:ring-4 focus:ring-[#2557D6]/50 focus:outline-none font-medium rounded-lg text-sm px-5 py-3 flex flex-row items-center justify-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                         Submit
                         <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2 mt-1" aria-hidden="true"

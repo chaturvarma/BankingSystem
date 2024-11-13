@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Create Loan Application - SKCAB Customer</title>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
@@ -49,10 +50,25 @@
                 View and manage all accounts with key details like names, numbers, types, and balances. Easily search
                 and filter for quick access to account information
             </p>
-
-            <form id="mainform" class="w-full max-w-[500px] mt-12 flex flex-col items-center">
+            <form id="mainform" class="w-full max-w-[500px] mt-12 flex flex-col items-center" method="POST"
+                action="/customer/loanapp_create">
                 <div class="flex flex-col items-center w-full gap-5 mt-0.5">
-                    <button type="button"
+                    <div class="w-full">
+                        <label for="loanAmount" class="block text-sm font-medium text-gray-700">Loan Amount</label>
+                        <input type="number" id="loanAmount" name="loanAmount" min="1" required
+                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#2557D6] focus:border-[#2557D6]">
+                    </div>
+                    <div class="w-full">
+                        <label for="loanType" class="block text-sm font-medium text-gray-700">Loan Type</label>
+                        <select id="loanType" name="loanType" required
+                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#2557D6] focus:border-[#2557D6]">
+                            <option value="Home Loan">Home Loan</option>
+                            <option value="Personal Loan">Personal Loan</option>
+                            <option value="Car Loan">Car Loan</option>
+                            <option value="Education Loan">Education Loan</option>
+                        </select>
+                    </div>
+                    <button type="submit"
                         class="w-1/2 text-white bg-[#2557D6] hover:bg-[#2557D6]/90 focus:ring-4 focus:ring-[#2557D6]/50 focus:outline-none font-medium rounded-lg text-base px-5 py-3 flex flex-row items-center justify-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                         Request Loan Account
                         <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2 mt-1" aria-hidden="true"

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Customers - SKCAB Employee</title>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
@@ -43,30 +44,30 @@
                 </ol>
             </nav>
             <h1 class="mb-4 mt-7 text-center font-[Arial] text-4xl font-bold text-gray-900 dark:text-white">Customers
-                List</h1>
+                of Branch</h1>
             <p
                 class="text-[17px] text-center font-normal max-w-[800px] text-gray-500 dark:text-gray-400 leading-relaxed">
                 View and manage all accounts with key details like names, numbers, types, and balances. Easily search
                 and filter for quick access to account information
             </p>
-            <ul class="w-full max-w-[550px] mt-11 flex flex-col align-middle">
-                <li class="bg-white p-4 border border-gray-200 rounded-xl mb-5">
+            <ul class="w-full max-w-[550px] mt-11 flex flex-col align-middle" th:if="${customers}">
+                <li th:each="customer : ${customers}" class="bg-white p-4 border border-gray-200 rounded-xl mb-5">
                     <div class="flex items-center space-x-4 rtl:space-x-reverse">
                         <div class="flex-shrink-0">
                             <img class="w-8 h-8 rounded-full"
                                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ0FpBg5Myb9CQ-bQpFou9BY9JXoRG6208_Q&s"
-                                alt="Neil image">
+                                alt="Customer image">
                         </div>
                         <div class="flex-1 min-w-0 text-blue-600">
                             <p class="text-base font-semibold text-gray-900 truncate dark:text-white">
-                                Sai Deep Dunduka
+                                <span th:text="${customer.name}">Customer Name</span>
                             </p>
                             <p class="text-sm font-normal text-gray-500 truncate dark:text-gray-400 mt-0.5">
-                                5 accounts
+                                <span th:text="${customer.CIF}">Number of Accounts</span>
                             </p>
                         </div>
                         <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                            2 years
+                            <span th:text="${customer.accounts.size()}">Number of Accounts</span> accounts
                         </div>
                         <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover"
                             data-dropdown-trigger="hover"
@@ -83,8 +84,10 @@
                             <ul class="py-2 text-sm text-gray-900 dark:text-gray-200"
                                 aria-labelledby="dropdownHoverButton">
                                 <li>
-                                    <a href="customers_info.html"
-                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">View Information</a>
+                                    <a th:href="/employee/customers_info?customerId=${customer.CIF}"
+                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                        Customer Information
+                                    </a>
                                 </li>
                             </ul>
                         </div>
