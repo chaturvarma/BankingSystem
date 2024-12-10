@@ -37,37 +37,61 @@ public class IndexController {
     @GetMapping("/")
     public String redirectToStaticIndex(Model model, HttpSession session) {
         if (bank == null) {
-            bank = new Bank("National Bank", "B001");
-            Branch branch = new Branch("BR001", "Main Branch", "123 Main St, City", "+91 9876543210");
+            bank = new Bank("Central Bank", "RB001");
+            Branch branch = new Branch("BR002", "Central Branch", "456 Central Ave, Metro City", "+91 8765432109");
             bank.addBranch(branch);
 
-            Manager manager = new Manager("Vijay Mallya", bank, branch, 75000, 1234567890L, "john.doe@bank.com",
-                    new Date());
+            Manager manager = new Manager("Rohit Sharma", bank, branch, 80000, 9812345678L,
+                    "rohit.sharma@randombank.com", new Date());
             branch.addEmployee(manager);
 
-            Employee employee1 = new Employee("Harshad Mehta", bank, branch, "Employee", "Branch", 45000, 9876543210L,
-                    "jane.smith@bank.com", new Date());
+            Employee employee1 = new Employee("Amit Verma", bank, branch, "Employee", "Operations", 50000, 9811223344L,
+                    "amit.verma@randombank.com", new Date());
             branch.addEmployee(employee1);
-            Employee employee2 = new Employee("Satyam Raju", bank, branch, "Employee", "Branch", 25000, 9876543210L,
-                    "matyas@bank.com", new Date());
+
+            Employee employee2 = new Employee("Priya Nair", bank, branch, "Employee", "Finance", 40000, 9822334455L,
+                    "priya.nair@randombank.com", new Date());
             branch.addEmployee(employee2);
 
-            Customer customer1 = new Customer("Mahesh Babu", "Film Nagar, Jubilee Hills", "+91 9876543210");
-            Customer customer2 = new Customer("Chandrababu Naidu", "AP CM Office", "+91 1234567890");
+            Employee employee3 = new Employee("Suresh Menon", bank, branch, "Employee", "Loans", 35000, 9833445566L,
+                    "suresh.menon@randombank.com", new Date());
+            branch.addEmployee(employee3);
+
+            Customer customer1 = new Customer("Neha Gupta", "Lal Bazar, Kolkata", "+91 9844556677");
+            Customer customer2 = new Customer("Rajiv Mehta", "Sarjapur Road, Bangalore", "+91 9855667788");
+            Customer customer3 = new Customer("Sunita Sharma", "Sector 18, Noida", "+91 9866778899");
+            Customer customer4 = new Customer("Manish Patel", "Gota Road, Ahmedabad", "+91 9877889900");
             branch.addCustomer(customer1);
             branch.addCustomer(customer2);
+            branch.addCustomer(customer3);
+            branch.addCustomer(customer4);
 
-            SavingsAccount savingsAccount1 = new SavingsAccount(customer1, branch, 1000.0, 5000.0, 5);
-            SavingsAccount savingsAccount2 = new SavingsAccount(customer2, branch, 1500.0, 7000.0, 5);
-            SavingsAccount savingsAccount3 = new SavingsAccount(customer1, branch, 1500.0, 7000.0, 5);
+            System.out.println("Manager Created: " + manager.getEmployeeId());
+            System.out.println("Employee Created: " + employee1.getEmployeeId());
+            System.out.println("Employee Created: " + employee2.getEmployeeId());
+            System.out.println("Employee Created: " + employee3.getEmployeeId());
+            System.out.println("Customer Created: " + customer1.getCIF());
+            System.out.println("Customer Created: " + customer2.getCIF());
+            System.out.println("Customer Created: " + customer3.getCIF());
+            System.out.println("Customer Created: " + customer4.getCIF());
+
+            SavingsAccount savingsAccount1 = new SavingsAccount(customer1, branch, 1200.0, 5500.0, 4);
+            SavingsAccount savingsAccount2 = new SavingsAccount(customer2, branch, 1600.0, 7500.0, 3);
+            SavingsAccount savingsAccount3 = new SavingsAccount(customer3, branch, 2000.0, 8000.0, 5);
+            SavingsAccount savingsAccount4 = new SavingsAccount(customer4, branch, 1800.0, 6500.0, 3);
             customer1.addAccount(savingsAccount1);
             customer2.addAccount(savingsAccount2);
-            customer1.addAccount(savingsAccount3);
+            customer3.addAccount(savingsAccount3);
+            customer4.addAccount(savingsAccount4);
 
             customer1.addDebitCard(savingsAccount1);
             customer2.addDebitCard(savingsAccount2);
-            customer1.addCreditCard(5000.0, 12.5);
-            customer2.addCreditCard(7000.0, 14.0);
+            customer3.addDebitCard(savingsAccount3);
+            customer4.addDebitCard(savingsAccount4);
+            customer1.addCreditCard(4000.0, 10.5);
+            customer2.addCreditCard(6000.0, 12.0);
+            customer3.addCreditCard(7000.0, 13.0);
+            customer4.addCreditCard(8000.0, 11.5);
         }
 
         if (bank != null && !bank.getBranches().isEmpty()) {
@@ -75,10 +99,7 @@ public class IndexController {
 
             if (!firstBranch.getCustomers().isEmpty()) {
                 Customer firstCustomer = firstBranch.getCustomers().get(0);
-                Customer secondCustomer = firstBranch.getCustomers().get(1);
-
                 session.setAttribute("cid_one", firstCustomer.getCIF());
-                session.setAttribute("cid_two", secondCustomer.getCIF());
             }
 
             List<Manager> managers = new ArrayList<>();
@@ -109,14 +130,116 @@ public class IndexController {
     }
 
     /*
-     * Customer application and routing starts from here
-     * This uses the route /customer fto perform all its functions
+     * Authentication Pages for each user type
      */
 
     @GetMapping("/customer")
     public String redirectToCustomerIndex(Model model, HttpSession session) {
-        return "customer/index";
+        return "customer/profile";
     }
+
+    @GetMapping("/customer/login")
+    public String getCustomerLogin(HttpSession session, Model model) {
+        return "customer/login";
+    }
+
+    @PostMapping("/customer/login")
+    public String handleCustomerLogin(@RequestParam("id") String customerId, HttpSession session, Model model) {
+        boolean customerExists = false;
+
+        for (Branch branch : bank.getBranches()) {
+            for (Customer customer : branch.getCustomers()) {
+                if (customer.getCIF().equals(customerId)) {
+                    session.removeAttribute("cid_one");
+                    session.setAttribute("cid_one", customerId);
+                    customerExists = true;
+                    break;
+                }
+            }
+            if (customerExists) {
+                break;
+            }
+        }
+
+        if (customerExists) {
+            return "redirect:/customer/profile";
+        } else {
+            return "customer/login";
+        }
+    }
+
+    @GetMapping("/employee")
+    public String redirectToEmployeeIndex(Model model, HttpSession session) {
+        return "employee/profile";
+    }
+
+    @GetMapping("/employee/login")
+    public String getEmployeeLogin(HttpSession session, Model model) {
+        return "employee/login";
+    }
+
+    @PostMapping("/employee/login")
+    public String handleEmployeeLogin(@RequestParam("id") String employeeId, HttpSession session, Model model) {
+        boolean employeeExists = false;
+
+        for (Branch branch : bank.getBranches()) {
+            for (Employee employee : branch.getEmployees()) {
+                if (employee.getEmployeeId().equals(employeeId)) {
+                    session.setAttribute("eid", employeeId);
+                    employeeExists = true;
+                    break;
+                }
+            }
+            if (employeeExists) {
+                break;
+            }
+        }
+
+        if (employeeExists) {
+            return "redirect:/employee/profile";
+        } else {
+            return "employee/login";
+        }
+    }
+
+    @GetMapping("/manager")
+    public String redirectToManagerIndex(Model model, HttpSession session) {
+        return "manager/profile";
+    }
+
+    @GetMapping("/manager/login")
+    public String getManagerLogin(HttpSession session, Model model) {
+        return "manager/login";
+    }
+
+    @PostMapping("/manager/login")
+    public String handleManagerLogin(@RequestParam("id") String managerId, HttpSession session, Model model) {
+        boolean managerExists = false;
+
+        for (Branch branch : bank.getBranches()) {
+            for (Employee employee : branch.getEmployees()) {
+                if (employee instanceof Manager && employee.getEmployeeId().equals(managerId)) {
+                    session.setAttribute("mid", managerId);
+                    managerExists = true;
+                    break;
+                }
+            }
+            if (managerExists) {
+                break;
+            }
+        }
+
+        if (managerExists) {
+            return "redirect:/manager/profile";
+        } else {
+            return "manager/login";
+        }
+    }
+
+    /*
+     * Customer application and routing starts from here
+     * This uses the route /customer fto perform all its functions
+     */
 
     @GetMapping("/customer/confirmation")
     public String customerConfirmation() {
@@ -850,11 +973,6 @@ public class IndexController {
      * Employee application and routing starts from here
      */
 
-    @GetMapping("/employee")
-    public String redirectToEmployeeIndex(Model model, HttpSession session) {
-        return "employee/index";
-    }
-
     @GetMapping("/employee/confirmation")
     public String employeeConfirmation() {
         return "employee/confirmation";
@@ -1072,11 +1190,6 @@ public class IndexController {
     /*
      * Manager application and routing starts from here
      */
-
-    @GetMapping("/manager")
-    public String redirectToManagerIndex(Model model, HttpSession session) {
-        return "manager/index";
-    }
 
     @GetMapping("/manager/confirmation")
     public String managerConfirmation() {

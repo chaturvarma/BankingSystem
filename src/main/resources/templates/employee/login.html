@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f3f4f6;
+            font-family: sans-serif;
+        }
+
+        h1 {
+            font-size: 30px;
+            max-width: 700px;
+            text-align: center;
+            line-height: 1.75;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 64px;
+            background-color: #ffffff;
+            padding: 30px;
+            width: 450px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Placeholder font */
+        ::placeholder {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+                Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        }
+
+        /* Submit Button */
+        .form button {
+            align-self: flex-end;
+        }
+
+        /* Styling for column labels */
+        .flex-column>label {
+            color: #151717;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        /* Input form */
+        .inputForm {
+            border: 1.5px solid #ecedec;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            transition: 0.2s ease-in-out;
+            margin-bottom: 16px;
+            font-size: 13px;
+            margin-top: 2px;
+        }
+
+        .input {
+            border-radius: 10px;
+            border: none;
+            width: 100%;
+            height: 100%;
+            font-size: 13px;
+        }
+
+        label {
+            font-size: 15px;
+        }
+
+        .input:focus {
+            outline: none;
+        }
+
+        .inputForm:focus-within {
+            border: 1.5px solid #2d79f3;
+        }
+
+        /* Styling for links & text */
+        .span {
+            font-size: 13px;
+            margin-left: 5px;
+            color: #2d79f3;
+            font-weight: 400;
+            cursor: pointer;
+            margin-bottom: 4px;
+        }
+
+        /* Submit button */
+        .button-submit {
+            margin: 4px 0 10px 0;
+            background-color: #151717;
+            border: none;
+            color: white;
+            font-size: 15px;
+            font-weight: 500;
+            border-radius: 8px;
+            height: 50px;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        /* Secondary links styling */
+        .p {
+            text-align: center;
+            color: black;
+            font-size: 13px;
+            margin: 5px 0;
+        }
+
+        .p.line {
+            color: #151717;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Please login with your valid employee credentials to proceed</h1>
+    <form class="form" method="POST" action="/employee/login">
+        <div class="flex-column">
+            <label for="id">Employee ID</label>
+        </div>
+        <div class="inputForm">
+            <input id="id" name="id" placeholder="Enter your Employee ID" class="input" type="text" required>
+        </div>
+
+        <button type="submit" class="button-submit">Sign In</button>
+    </form>
+</body>
+
+</html>

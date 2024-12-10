@@ -168,14 +168,4 @@ public class Employee {
             System.out.println(type + " Account opened for Customer: " + customer.getName());
         }
     }
-
-    // public void closeAccount(Account account) {
-    //     String current_status = account.getStatus();
-    //     if (current_status.equals("Active")) {
-    //         account.setStatus("Closed");
-    //         System.out.println("Account " + account.getAccountNumber() + " has been closed");
-    //     } else {
-    //         System.out.println("Account " + account.getAccountNumber() + " is already closed");
-    //     }
-    // }
 }
