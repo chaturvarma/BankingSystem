@@ -62,8 +62,8 @@ Contains static assets like CSS, JavaScript, and image files used for the fronte
 
 ## Contributors
 
-- Chatur Varma Inampudi
-- Sri Sai Deep Dunduka
-- Bhargav Madala
-- Krushik Teja Thati
-- Anish Kumar Maganti
+- Sri Sai Deep Dunduka (https://github.com/Saideep3376)
+- Bhargav Madala (https://github.com/MvB2358)
+- Krushik Teja Thati (https://github.com/Krushik2004)
+- Anish Kumar Maganti (https://github.com/anish2626)
+- Chatur Varma Inampudi (https://github.com/chaturvarma)
