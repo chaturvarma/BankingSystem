@@ -62,7 +62,7 @@ Contains static assets like CSS, JavaScript, and image files used for the fronte
 
 ## Contributors
 
-- Sri Sai Deep Dunduka (https://github.com/Saideep3376)
+- Sri Sai Deep Duduka (https://github.com/Saideep3376)
 - Bhargav Madala (https://github.com/MvB2358)
 - Krushik Teja Thati (https://github.com/Krushik2004)
 - Anish Kumar Maganti (https://github.com/anish2626)
