@@ -32,6 +32,10 @@ Ensure the following software is installed on your system:
 - **Maven**: Primary build and dependency management tool
 - **Gradle**: Version 8.0
 
+## UML Diagram
+
+Please check out our UML diagram from the reference link: https://lucid.app/lucidchart/d3734aed-88d0-4a7f-a5d6-174cf1a300ee/edit?invitationId=inv_9d36b12d-2214-4b95-92ac-9b0261720895
+
 ## Code Contents
 
 ### Backend Code (All Classes)
