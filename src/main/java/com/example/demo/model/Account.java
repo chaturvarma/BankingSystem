@@ -48,7 +48,7 @@ public abstract class Account {
         return branch;
     }
 
-    public boolean withdraw(double amount) {
+   abstract public boolean withdraw(double amount) {
         if (amount > 0) {
             balance -= amount;
             return true;
